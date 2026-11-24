@@ -1062,7 +1062,7 @@ function pendPrev(ym, d = D()) {
   return out.sort((a, c) => a.date.localeCompare(c.date) || a.desc.localeCompare(c.desc));
 }
 const pendPrevTot = (ym, d = D()) => r2(sum(pendPrev(ym, d).map(i => i.val)));
-const mesNome = ym => MONTHS[+ym.slice(5) - 1].toLowerCase() + (ym.slice(0, 4) !== curYM().slice(0, 4) ? ' de ' + ym.slice(0, 4) : '');
+const mesNome = (ym, ref) => MONTHS[+ym.slice(5) - 1].toLowerCase() + (ym.slice(0, 4) !== (ref || S.ym || curYM()).slice(0, 4) ? ' de ' + ym.slice(0, 4) : '');
 
 function budget(ym, d = D()) {
   const items = monthItems(ym, d), g = { fixas: 0, cartao: 0, apto: 0, fitness: 0, dia: 0, reserva: 0 };
