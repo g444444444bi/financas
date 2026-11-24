@@ -885,6 +885,8 @@ function cleanSeedExtras(d) {
   }
   d.seeds.fixW1 = now;
 }
+/** estado da inicialização: pristine = navegador/domínio sem dados, ainda sem resposta da nuvem */
+const BOOT = { pristine: false };
 function loadReal() {
   let raw = null; try { raw = localStorage.getItem(KEY); } catch (e) { }
   let obj = null;
@@ -895,9 +897,19 @@ function loadReal() {
     if (ok) { const out = JSON.stringify(d); if (out !== raw) { try { localStorage.setItem(KEY, out); } catch (e) { } } }
     return d;
   }
-  const d = emptyData(); seedRafaela(d); d.seeds.fixW1 = Date.now(); seedReal2(d); seedCuryPdf(d); seedReal3(d); fillMuscle(d);
-  if (!raw) { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) { } } // dado ilegível NÃO é sobrescrito aqui
-  return d;
+  // Aparelho/domínio novo: NÃO semeia e NÃO grava nada antes de consultar a nuvem.
+  // Os seeds só rodam depois que a sincronização inicial confirmar que a conta não tem dados.
+  BOOT.pristine = true;
+  return emptyData();
+}
+/** roda os cadastros iniciais uma única vez, na mesma ordem de sempre */
+function seedAll(d) { seedRafaela(d); cleanSeedExtras(d); seedReal2(d); seedCuryPdf(d); seedReal3(d); fillMuscle(d); }
+/** libera o aparelho novo depois da sincronização inicial. Semeia SÓ quando a conta está realmente vazia. */
+function bootResolve(contaVazia) {
+  if (!BOOT.pristine) return;
+  BOOT.pristine = false;
+  if (contaVazia) { seedAll(Store.real); Stamp.reset(Store.real); }
+  Store.persistLocal();
 }
 const isEmptyData = d => !(d.tx.length || d.cards.length || d.buys.length || d.apt.info || d.apt.parc.length || d.apt.obra.length || d.workouts.some(w => !w.seed) || d.plan.length || d.body.length || d.events.length || d.goals.length || d.docs.length || d.programs.some(p => !p.seed) || d.photos.length || d.hsamples.length || d.reserve.initial || d.settings.weekGoal);
 
@@ -3855,9 +3867,12 @@ function seedCuryPdf(d) {
   d.seeds.curyPdf1 = Date.now(); return true;
 }
 
+/** carimbo fixo dos cadastros iniciais: igual em qualquer aparelho, para o merge nunca ver
+    dois registros "diferentes" so porque foram semeados em momentos diferentes. */
+const SEED_STAMP = 1794369100978;
 function seedReal2(d) {
   if (d.seeds.curyCaixa1) return false;
-  const a = d.apt, T = '2026-11-10', now = Date.now(), has = (arr, id) => arr.some(x => x.id === id);
+  const a = d.apt, T = '2026-11-10', now = SEED_STAMP, has = (arr, id) => arr.some(x => x.id === id);
   if (!a.info) a.info = { name: 'Apartamento', builder: 'Cury' };
   Object.assign(a.info, { value: 291038.7, valueSource: 'cury', valueDate: T });
   if (a.info.entrada == null || a.info.entrada === '') a.info.entrada = 800;
@@ -4055,7 +4070,11 @@ const Cloud = {
   async onUser(u) {
     if (!u) { this.uid = null; S.cloud = 'off'; renderSide(); if (!UI.local) Gate.show('login'); return; }
     this.uid = u.uid; S.cloudUser = u.email || ''; Gate.msg('Sincronizando…', true);
-    try { const a = await this.engine.pull(); this.say(a); if (a.ok) this.say(await this.engine.push()); this.lastPull = Date.now(); }
+    try {
+      const a = await this.engine.pull(); this.say(a);
+      if (a.ok) { bootResolve(a.empty === true); this.say(await this.engine.push()); }  // só grava depois de validar a nuvem
+      this.lastPull = Date.now();
+    }
     catch (e) { console.warn(e); S.cloud = 'err'; toast('Não foi possível sincronizar. Usando dados deste aparelho.', 'err'); }
     UI.local = false; saveUI(); Gate.hide(); render();
   },
@@ -4064,9 +4083,9 @@ const Cloud = {
     this.busy = true;
     try { const r = await this.engine.pull(); this.lastPull = Date.now(); if (r.ok && r.changed) { render(); this.queue(); } else if (!r.ok) this.say(r); } catch (e) { } finally { this.busy = false; }
   },
-  queue() { if (!this.uid || !this.engine || this.engine.st.blocked) return; clearTimeout(this.timer); this.timer = setTimeout(() => this.push(), 800); },
+  queue() { if (!this.uid || !this.engine || this.engine.st.blocked || BOOT.pristine) return; clearTimeout(this.timer); this.timer = setTimeout(() => this.push(), 800); },
   async push() {
-    if (!this.uid || !this.engine || this.engine.st.blocked) return;
+    if (!this.uid || !this.engine || this.engine.st.blocked || BOOT.pristine) return;
     if (this.busy) { this.again = true; return; }
     this.busy = true;
     try { const r = await this.engine.push(); this.say(r); if (r.ok) render(); } catch (e) { console.warn(e); S.cloud = 'err'; }
@@ -4102,7 +4121,7 @@ const Gate = {
       try { await Cloud.login(em, pw); } catch (x) { this.msg(FBERR[x && x.code] || 'Não foi possível entrar: ' + ((x && x.code) || x)); }
     };
     $('#gReset').onclick = async () => { const em = $('#lu').value.trim(); if (!em) return this.msg('Digite seu e-mail primeiro.'); try { await Cloud.reset(em); this.msg('Enviamos um link de redefinição para o seu e-mail.', true); } catch (x) { this.msg(FBERR[x && x.code] || 'Erro ao enviar o e-mail.'); } };
-    $('#gLocal').onclick = () => { UI.local = true; saveUI(); this.hide(); render(); };
+    $('#gLocal').onclick = () => { UI.local = true; saveUI(); bootResolve(true); this.hide(); render(); };
   },
   msg(t, ok) { const m = $('#gmsg'); if (m) { m.textContent = t; m.classList.toggle('ok', !!ok); } },
   hide() { this.el().classList.remove('show'); this.el().innerHTML = ''; },
