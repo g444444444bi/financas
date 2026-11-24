@@ -690,7 +690,7 @@ const Backup = {
 };
 
 /** Carimbos por registro (updatedAt) e lápides (exclusões) — base do merge. Registros antigos ficam com 0. */
-const STAMP_PATHS = ['tx', 'cards', 'buys', 'cats', 'plan', 'workouts', 'body', 'events', 'goals', 'docs', 'programs', 'photos', 'hsamples', 'imports', 'links', 'activity',
+const STAMP_PATHS = ['tx', 'cards', 'buys', 'cats', 'plan', 'reserve.mov', 'workouts', 'body', 'events', 'goals', 'docs', 'programs', 'photos', 'hsamples', 'imports', 'links', 'activity',
   'apt.parc', 'apt.obra', 'apt.caixaHist', 'apt.curyHist', 'apt.fontes', 'apt.caixaLog', 'apt.curyObra', 'apt.caixaObra', 'apt.curyParcHist', 'cycle.cycles', 'cycle.symptoms', 'cycle.bbt'];
 const getPath = (d, p) => p.split('.').reduce((o, k) => (o ? o[k] : undefined), d);
 const recJSON = r => { const { updatedAt, ...x } = r; return JSON.stringify(x); };
@@ -838,7 +838,7 @@ function fillMuscle(d) {
 const SETTINGS_DEF = () => ({ weekGoal: 0, name: 'Gabriela', photo: '', hideSensitive: false, syncSensitive: false });
 const emptyData = () => ({
   v: SCHEMA, savedAt: 0,
-  tx: [], cards: [], buys: [], cats: JSON.parse(JSON.stringify(DEFAULT_CATS)), reserve: { initial: 0 },
+  tx: [], cards: [], buys: [], cats: JSON.parse(JSON.stringify(DEFAULT_CATS)), reserve: { initial: 0, mov: [] },
   apt: { info: null, obra: [], parc: [], caixa: null, caixaHist: [], curyHist: [], fontes: [], caixaLog: [], curyObra: [], caixaObra: [], curyParcHist: [], amortGoal: null },
   plan: [], workouts: [], body: [], events: [], goals: [], docs: [],
   programs: [], photos: [], hsamples: [], imports: [], links: [], activity: [], refs: {},
@@ -852,7 +852,8 @@ function normalize(d) {
   for (const k of Object.keys(e)) if (d[k] === undefined || d[k] === null) d[k] = e[k];
   d.apt = Object.assign({ info: null, obra: [], parc: [], caixa: null, caixaHist: [], curyHist: [], fontes: [], caixaLog: [], curyObra: [], caixaObra: [], curyParcHist: [], amortGoal: null }, d.apt);
   d.settings = Object.assign(SETTINGS_DEF(), d.settings);
-  d.reserve = Object.assign({ initial: 0 }, d.reserve);
+  d.reserve = Object.assign({ initial: 0, mov: [] }, d.reserve);
+  if (!Array.isArray(d.reserve.mov)) d.reserve.mov = [];
   d.cycle = Object.assign({ cycles: [], symptoms: [], bbt: [], summary: null }, d.cycle);
   if (!Array.isArray(d.tomb)) d.tomb = [];
   if (!d.cats.length) d.cats = e.cats;
@@ -1022,9 +1023,47 @@ function monthItems(ym, d = D()) {
     if (p.due.slice(0, 7) !== ym || p.paidBy === 'caixa') return; // repasse da CAIXA não sai do seu bolso
     out.push({ key: 'a:' + p.id, kind: 'apt', id: p.id, type: 'out', desc: 'Apto · ' + p.desc, val: +p.val, day: +p.due.slice(8), cat: 'apartamento', group: 'apto', paid: !!p.paid });
   });
-  out.forEach(i => { i.date = ym + '-' + pad(i.day); i.over = i.type === 'out' && !i.paid && i.date < T; });
+  out.forEach(i => { i.oym = ym; i.date = ym + '-' + pad(i.day); i.over = i.type === 'out' && !i.paid && i.date < T; });
   return out.sort((a, b) => a.day - b.day || a.desc.localeCompare(b.desc));
 }
+/** SAÍDAS ainda não pagas de meses ANTERIORES a `ym`. É só leitura: não cria, não copia e não
+    altera nenhum registro — cada item aponta para o lançamento original e para o mês de origem. */
+function pendPrev(ym, d = D()) {
+  const T = todayISO(), out = [], LIM = 240, ant = ymAdd(ym, -1);
+  d.tx.forEach(t => {
+    if (t.type !== 'out') return;
+    const sym = t.date.slice(0, 7); if (sym >= ym) return;
+    const fim = t.rec ? (t.end && t.end < ant ? t.end : ant) : sym;
+    const n = Math.min(t.rec ? ymDiff(sym, fim) : 0, LIM);
+    for (let i = 0; i <= n; i++) {
+      const oym = ymAdd(sym, i); if (oym >= ym) break;
+      if (t.paid && t.paid[oym]) continue;
+      const o = occ(t, oym); if (!o) continue;
+      const c = catOf(t.cat, d);
+      out.push({ key: 't:' + t.id + '@' + oym, kind: 'tx', id: t.id, oym, type: 'out', desc: t.desc, val: +t.val, day: o.day, cat: t.cat, group: c.group, paid: false, rec: t.rec, prev: true });
+    }
+  });
+  const b0 = d.buys.length ? d.buys.map(b => b.date.slice(0, 7)).sort()[0] : null;
+  if (b0 && b0 < ym) d.cards.forEach(c => {
+    const n = Math.min(ymDiff(b0, ant), LIM);
+    for (let i = 0; i <= n; i++) {
+      const oym = ymAdd(b0, i); if (oym >= ym) break;
+      if (c.paid && c.paid[oym]) continue;
+      const v = invoice(c, oym, d); if (v <= 0) continue;
+      out.push({ key: 'c:' + c.id + '@' + oym, kind: 'card', id: c.id, oym, type: 'out', desc: 'Fatura ' + c.name, val: v, day: Math.min(c.due || 1, daysIn(oym)), cat: 'cartao', group: 'cartao', paid: false, prev: true });
+    }
+  });
+  d.apt.parc.forEach(p => {
+    const oym = p.due.slice(0, 7);
+    if (oym >= ym || p.paid || p.paidBy === 'caixa') return;
+    out.push({ key: 'a:' + p.id + '@' + oym, kind: 'apt', id: p.id, oym, type: 'out', desc: 'Apto · ' + p.desc, val: +p.val, day: +p.due.slice(8), cat: 'apartamento', group: 'apto', paid: false, prev: true });
+  });
+  out.forEach(i => { i.date = i.oym + '-' + pad(i.day); i.over = i.date < T; });
+  return out.sort((a, c) => a.date.localeCompare(c.date) || a.desc.localeCompare(c.desc));
+}
+const pendPrevTot = (ym, d = D()) => r2(sum(pendPrev(ym, d).map(i => i.val)));
+const mesNome = ym => MONTHS[+ym.slice(5) - 1].toLowerCase() + (ym.slice(0, 4) !== curYM().slice(0, 4) ? ' de ' + ym.slice(0, 4) : '');
+
 function budget(ym, d = D()) {
   const items = monthItems(ym, d), g = { fixas: 0, cartao: 0, apto: 0, fitness: 0, dia: 0, reserva: 0 };
   let inc = 0, paidOut = 0;
@@ -1035,15 +1074,28 @@ function budget(ym, d = D()) {
   const spent = sum(Object.values(g));
   return { items, inc: r2(inc), g, spent: r2(spent), sobra: r2(inc - spent), paidOut: r2(paidOut), outs: items.filter(i => i.type === 'out') };
 }
-const reserveBal = (d = D()) => {
-  let s = +d.reserve.initial || 0;
-  d.tx.forEach(t => { if (t.type === 'out' && catOf(t.cat, d).group === 'reserva') Object.values(t.paid || {}).forEach(v => { if (v) s += +t.val; }); });
-  return r2(s);
-};
+const RESKIND = { aj: 'Ajuste de saldo', dep: 'Depósito', ret: 'Retirada' };
+/** tudo que move a reserva: contas da categoria Reserva marcadas como pagas + movimentações próprias */
+function reserveEvents(d = D()) {
+  const ev = [];
+  d.tx.forEach(t => {
+    if (t.type !== 'out' || catOf(t.cat, d).group !== 'reserva') return;
+    Object.keys(t.paid || {}).forEach(ym => { if (!t.paid[ym]) return;
+      ev.push({ id: 'tx:' + t.id + ':' + ym, date: ym + '-' + pad(Math.min(+t.date.slice(8), daysIn(ym))), kind: 'dep', val: +t.val, desc: t.desc, auto: true }); });
+  });
+  (d.reserve.mov || []).forEach(m => ev.push(Object.assign({}, m, { auto: false })));
+  return ev.sort((a, b) => (a.date || '').localeCompare(b.date || '') || (a.at || 0) - (b.at || 0));
+}
+/** fonte única do saldo: percorre os eventos em ordem. Ajuste DEFINE o saldo; depósito soma; retirada subtrai. */
+function reserveHist(d = D()) {
+  let s = r2(+d.reserve.initial || 0);
+  return reserveEvents(d).map(e => { const ant = s; s = e.kind === 'aj' ? r2(+e.val) : e.kind === 'ret' ? r2(s - +e.val) : r2(s + +e.val); return Object.assign({}, e, { ant, sal: s }); });
+}
+const reserveBal = (d = D()) => { const h = reserveHist(d); return h.length ? h[h.length - 1].sal : r2(+d.reserve.initial || 0); };
 function setPaid(it, val) {
-  const d = D();
-  if (it.kind === 'tx') { const t = d.tx.find(x => x.id === it.id); if (!t) return; t.paid = t.paid || {}; if (val) t.paid[S.ym] = true; else delete t.paid[S.ym]; }
-  if (it.kind === 'card') { const c = d.cards.find(x => x.id === it.id); if (!c) return; c.paid = c.paid || {}; if (val) c.paid[S.ym] = true; else delete c.paid[S.ym]; }
+  const d = D(), ym = it.oym || S.ym;   // pendência antiga: paga no mês de ORIGEM, sem mexer no vencimento
+  if (it.kind === 'tx') { const t = d.tx.find(x => x.id === it.id); if (!t) return; t.paid = t.paid || {}; if (val) t.paid[ym] = true; else delete t.paid[ym]; }
+  if (it.kind === 'card') { const c = d.cards.find(x => x.id === it.id); if (!c) return; c.paid = c.paid || {}; if (val) c.paid[ym] = true; else delete c.paid[ym]; }
   if (it.kind === 'apt') { const p = d.apt.parc.find(x => x.id === it.id); if (!p) return; p.paid = !!val; p.paidDate = val ? todayISO() : ''; }
 }
 
@@ -1475,10 +1527,11 @@ function dueText(it) {
 function payRow(i) {
   return `<div class="li ${i.paid ? 'paid' : ''} ${i.type === 'in' ? '' : 'clk'}">
     <button class="chk ${i.paid ? 'on' : ''}" data-act="pay" data-k="${esc(i.key)}" role="checkbox" aria-checked="${i.paid}" aria-label="Marcar ${esc(i.desc)} como ${i.paid ? 'pendente' : 'paga'}">${ic('check')}</button>
-    <div class="n" data-act="editItem" data-k="${esc(i.key)}">${esc(i.desc)}<small>${i.paid ? 'Paga' : dueText(i)}</small></div><div class="v">${R(i.val)}</div></div>`;
+    <div class="n" data-act="editItem" data-k="${esc(i.key)}">${esc(i.desc)}<small>${i.prev ? `Pendência de ${mesNome(i.oym)} · venc. ${fdate(i.date).slice(0, 5)}` : i.paid ? 'Paga' : dueText(i)}</small></div><div class="v">${R(i.val)}</div></div>`;
 }
 function cPagar(b) {
-  const outs = b.outs, pend = outs.filter(i => !i.paid);
+  const outs = b.outs, pend = outs.filter(i => !i.paid), prev = pendPrev(S.ym);
+  const totMes = r2(sum(pend.map(i => i.val))), totPrev = r2(sum(prev.map(i => i.val)));
   const days = [...new Set(pend.map(i => i.day))].sort((a, c) => a - c);
   if (S.payDay != null && !days.includes(S.payDay)) S.payDay = null;
   const list = (S.payDay == null ? outs : outs.filter(i => i.day === S.payDay)).slice().sort((a, c) => (a.paid - c.paid) || (a.day - c.day));
@@ -1487,9 +1540,9 @@ function cPagar(b) {
   const chips = days.length ? `<div class="chips mt12"><button class="daychip ${S.payDay == null ? 'on' : ''}" data-act="payDay" data-v="">Todas<small>${pend.length}</small></button>${days.map(dy => `<button class="daychip ${S.payDay === dy ? 'on' : ''}" data-act="payDay" data-v="${dy}">${pad(dy)}<small>${'•'.repeat(Math.min(5, pend.filter(i => i.day === dy).length))}</small></button>`).join('')}</div>` : '';
   const body = outs.length ? `<div class="pay-scroll list">${list.map(payRow).join('')}</div>` : emptyBox('receipt', 'Nenhuma conta neste mês', 'Cadastre contas para acompanhar vencimentos.', 'Nova conta', 'add', 'data-v="bill"');
   return `<section class="card s4 r2 c-pagar">${illus('calendar', 'a')}<div class="ch"><span class="ttl">Contas a pagar</span></div>
-  <div class="mt12">${bigMoney(b.outs.filter(i => !i.paid).reduce((s, i) => s + i.val, 0), 'mid tnum')}</div>
-  <div class="lbl mt4">${outs.length ? `${outs.length - pend.length} de ${outs.length} pagas${nt ? ' · ' + nt : ''}` : 'Nenhuma conta cadastrada'}</div>
-  ${chips}${body}</section>`;
+  <div class="mt12">${bigMoney(r2(totMes + totPrev), 'mid tnum')}</div>
+  <div class="lbl mt4">${outs.length ? `${outs.length - pend.length} de ${outs.length} pagas${nt ? ' · ' + nt : ''}` : 'Nenhuma conta cadastrada'}${totPrev ? ` · ${R(totMes)} deste mês + ${R(totPrev)} de meses anteriores` : ''}</div>
+  ${chips}${body}${prev.length ? `<hr class="sep"><div class="mk">Pendências de meses anteriores <small>${prev.length}</small></div><div class="pay-scroll list">${prev.map(payRow).join('')}</div>` : ''}</section>`;
 }
 
 function cOrcamento(b) {
@@ -1627,7 +1680,8 @@ function statusPill(i) {
 }
 function vFin() {
   const b = budget(S.ym), d = D();
-  let rows = b.items.slice();
+  const prevPend = ['all', 'out', 'pend'].includes(S.finTab || 'all') ? pendPrev(S.ym) : [];
+  let rows = prevPend.concat(b.items);
   if (S.finTab === 'in') rows = rows.filter(i => i.type === 'in');
   if (S.finTab === 'out') rows = rows.filter(i => i.type === 'out');
   if (S.finTab === 'pend') rows = rows.filter(i => i.type === 'out' && !i.paid);
@@ -1638,17 +1692,19 @@ function vFin() {
   const tr = rows.map(i => {
     const c = catOf(i.cat), edit = i.kind === 'tx' ? 'editItem' : i.kind === 'card' ? 'editCard' : 'editParc';
     return `<tr><td style="width:44px"><button class="chk ${i.paid ? 'on' : ''}" data-act="pay" data-k="${esc(i.key)}" aria-label="Alternar pagamento">${ic('check')}</button></td><td class="tnum mu" style="width:46px">${pad(i.day)}</td>
-    <td><b class="fw6">${esc(i.desc)}</b>${i.kind === 'tx' && i.rec ? '<div class="xs mu">Todo mês</div>' : i.kind === 'card' ? '<div class="xs mu">Fatura do cartão</div>' : i.kind === 'apt' ? '<div class="xs mu">Parcela do apartamento</div>' : ''}</td>
+    <td><b class="fw6">${esc(i.desc)}</b>${i.prev ? `<div class="xs mu">Pendência de ${mesNome(i.oym)} · vencimento ${fdate(i.date)}</div>` : i.kind === 'tx' && i.rec ? '<div class="xs mu">Todo mês</div>' : i.kind === 'card' ? '<div class="xs mu">Fatura do cartão</div>' : i.kind === 'apt' ? '<div class="xs mu">Parcela do apartamento</div>' : ''}</td>
     <td><span class="rowf" style="gap:7px"><span class="dot" style="background:${c.color}"></span>${esc(c.name)}</span></td><td>${statusPill(i)}</td>
     <td class="r tnum fw6" style="color:${i.type === 'in' ? 'var(--gr)' : 'var(--tx)'}">${i.type === 'in' ? '+' : '−'} ${R(i.val)}</td>
-    <td class="r"><div class="actions"><button class="ib" data-act="${edit}" data-id="${i.id}" data-k="${esc(i.key)}" aria-label="Editar">${ic('pencil', 's')}</button>${i.kind === 'tx' ? delBtn('tx', i.id) : ''}</div></td></tr>`;
+    <td class="r"><div class="actions"><button class="ib" data-act="${edit}" data-id="${i.id}" data-k="${esc(i.key)}" aria-label="Editar">${ic('pencil', 's')}</button>${i.kind === 'tx' && !i.prev ? delBtn('tx', i.id) : ''}</div></td></tr>`;
   }).join('');
   const trend = Array.from({ length: 6 }, (_, i) => { const ym = ymAdd(S.ym, i - 5), x = budget(ym); return { l: MON3[+ym.slice(5) - 1], a: x.inc, b: x.spent, cur: i === 5 }; });
   const cats = {};
   b.outs.forEach(i => { const o = cats[i.cat] || (cats[i.cat] = { c: catOf(i.cat), v: 0 }); o.v += i.val; });
   const cl = Object.values(cats).sort((a, c) => c.v - a.v);
   return `<div class="grid">${cSaldo(b, 's8')}
-  <section class="card s4">${illus('wallet')}<div class="ch"><span class="ttl">Reserva</span></div><div class="lbl mt12">Saldo acumulado</div><div class="mt4">${bigMoney(reserveBal(), 'mid tnum')}</div><div class="lbl mt8">${R(b.g.reserva)} reservados em ${MONTHS[+S.ym.slice(5) - 1].toLowerCase()}</div><div class="grow"></div><div class="rowf mt16"><button class="btn sm" data-act="reserve">Ajustar saldo inicial</button></div></section>
+  ${(() => { const h = reserveHist().slice().reverse(); return `<section class="card s4">${illus('wallet')}<div class="ch"><span class="ttl">Reserva</span><span class="grow"></span><button class="btn sm" data-act="reserve" aria-label="Movimentar a reserva">${ic('pencil', 's')}</button></div><div class="lbl mt12">Saldo acumulado</div><div class="mt4">${bigMoney(reserveBal(), 'mid tnum')}</div><div class="lbl mt8">${R(b.g.reserva)} reservados em ${MONTHS[+S.ym.slice(5) - 1].toLowerCase()}</div>
+  ${h.length ? `<hr class="sep"><div class="mk">Movimentações <small>${h.length}</small></div><div class="list mt8">${h.slice(0, 6).map(m => `<div class="li"><div class="n">${esc(m.desc || RESKIND[m.kind])}<small>${fdate(m.date)} · ${RESKIND[m.kind]} · saldo ${R(m.ant)} → ${R(m.sal)}</small></div><div class="v">${m.kind === 'aj' ? '=' : m.kind === 'ret' ? '−' : '+'} ${R(m.val)}</div>${m.auto ? '' : `<div class="actions"><button class="ib" data-act="resMov" data-id="${esc(m.id)}" aria-label="Editar">${ic('pencil', 's')}</button></div>`}</div>`).join('')}</div>${h.length > 6 ? `<div class="xs mu mt8">Mostrando as 6 mais recentes de ${h.length}.</div>` : ''}` : ''}
+  <div class="grow"></div><div class="rowf mt16"><button class="btn sm" data-act="reserve">Movimentar reserva</button></div></section>`; })()}
   <section class="card s12"><div class="rowf wrap between mb8"><span class="ttl">Lançamentos de ${MONTHS[+S.ym.slice(5) - 1].toLowerCase()}</span><div class="rowf wrap"><button class="btn sm" data-act="add" data-v="bill">${ic('plus', 's')} Nova conta</button><button class="btn sm pri" data-act="add" data-v="tx">${ic('plus', 's')} Novo lançamento</button></div></div>
   <div class="rowf wrap between mt8"><div class="tabs" style="max-width:100%;overflow-x:auto">${tabs.map(([k, l]) => `<button class="${S.finTab === k ? 'on' : ''}" data-act="finTab" data-v="${k}">${l}</button>`).join('')}</div>
    <div class="rowf wrap"><select class="inp" style="width:auto;padding:7px 32px 7px 12px" data-act="finCat" aria-label="Filtrar categoria"><option value="">Todas as categorias</option>${d.cats.map(c => `<option value="${c.id}" ${S.finCat === c.id ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select><label class="search"><span>${ic('search', 's')}</span><input id="finQ" placeholder="Buscar lançamento" value="${esc(S.finQ)}"></label></div></div>
@@ -2454,9 +2510,27 @@ function catForm(id = null) {
     onSubmit(v) { if (c) Object.assign(c, { name: v.name, group: v.group, color: v.color }); else d.cats.push({ id: 'c' + uid(), name: v.name, group: v.group, color: v.color }); commit('Categoria salva'); },
   });
 }
-function reserveForm() {
-  const d = D();
-  openForm({ title: 'Saldo da reserva', sub: 'O saldo é o valor inicial + tudo que você marcar como pago nas contas da categoria Reserva.', fields: [{ k: 'initial', label: 'Saldo inicial (R$)', type: 'money', hint: `Saldo atual calculado: ${R(reserveBal())}` }], values: { initial: d.reserve.initial || '' }, submit: 'Salvar', onSubmit(v) { d.reserve.initial = v.initial || 0; commit('Reserva atualizada'); } });
+function reserveForm(mov) {
+  const d = D(), m = mov || null;
+  openForm({
+    title: m ? 'Editar movimentação da reserva' : 'Movimentar a reserva',
+    sub: `Saldo atual: ${R(reserveBal())}. O ajuste DEFINE o saldo; depósito soma; retirada subtrai.`,
+    fields: [
+      { k: 'kind', label: 'Tipo', type: 'select', opts: [['aj', 'Ajuste de saldo'], ['dep', 'Depósito'], ['ret', 'Retirada']], half: true },
+      { k: 'val', label: 'Valor (R$)', type: 'money', req: true, pos: true, half: true },
+      { k: 'date', label: 'Data', type: 'date', half: true },
+      { k: 'desc', label: 'Descrição', ph: 'Opcional' },
+    ],
+    values: m ? { kind: m.kind, val: m.val, date: m.date, desc: m.desc || '' } : { kind: 'aj', val: '', date: todayISO(), desc: '' },
+    submit: 'Salvar',
+    onDelete: m ? () => { d.reserve.mov = (d.reserve.mov || []).filter(x => x.id !== m.id); commit('Movimentação da reserva removida'); } : null,
+    onSubmit(v) {
+      const rec = { kind: v.kind || 'aj', val: r2(v.val), date: v.date || todayISO(), desc: (v.desc || '').trim() };
+      if (m) Object.assign(m, rec);
+      else { d.reserve.mov = d.reserve.mov || []; d.reserve.mov.push(Object.assign({ id: uid(), at: Date.now() }, rec)); }
+      commit(m ? 'Movimentação atualizada' : RESKIND[rec.kind] + ' registrado na reserva');
+    },
+  });
 }
 function weekGoalForm() {
   const d = D();
@@ -2589,7 +2663,7 @@ function exitDemo() {
 }
 function setTheme(t) { document.documentElement.dataset.theme = t; UI.theme = t; saveUI(); const m = document.querySelector('meta[name=theme-color]'); if (m) m.content = t === 'dark' ? '#0a0c10' : '#f3f4f6'; }
 
-function itemByKey(key, ym = S.ym) { return monthItems(ym).find(i => i.key === key); }
+function itemByKey(key, ym = S.ym) { return (key.includes('@') ? pendPrev(ym) : monthItems(ym)).find(i => i.key === key); }
 const ADD = {
   tx: () => txForm({ title: 'Novo lançamento financeiro' }), bill: () => txForm({ type: 'out', fixed: true, rec: true, title: 'Nova conta' }), card: () => cardForm(), parc: () => parcForm(), obra: () => obraForm(),
   workout: () => workoutForm(), body: () => bodyForm(), event: () => eventForm({ date: S.page === 'agenda' ? S.calSel : '' }), goal: () => goalForm(), doc: () => newDocForm(), income: () => txForm({ type: 'in', fixed: true, rec: true, title: 'Nova renda' }),
@@ -2608,7 +2682,7 @@ const ACT = {
   addIncome: () => txForm({ type: 'in', fixed: true, rec: true, title: 'Nova renda' }),
   pay: el => {
     const key = el.dataset.k;
-    if (key.startsWith('a:')) { const p = D().apt.parc.find(x => x.id === key.slice(2)); if (!p) return; setPaid({ kind: 'apt', id: p.id }, !p.paid); commit(p.paid ? 'Parcela marcada como paga' : 'Parcela reaberta'); return; }
+    if (key.startsWith('a:')) { const p = D().apt.parc.find(x => x.id === key.slice(2).split('@')[0]); if (!p) return; setPaid({ kind: 'apt', id: p.id }, !p.paid); commit(p.paid ? 'Parcela marcada como paga' : 'Parcela reaberta'); return; }
     const it = itemByKey(key); if (!it) return;
     setPaid(it, !it.paid); commit(!it.paid ? (it.type === 'in' ? 'Receita marcada como recebida' : 'Conta marcada como paga') : 'Marcada como pendente');
   },
@@ -2618,7 +2692,7 @@ const ACT = {
     if (el.dataset.id) { const k2 = k || ''; if (k2.startsWith('c:')) return cardForm(el.dataset.id); if (k2.startsWith('a:')) return parcForm(el.dataset.id); txForm({ id: el.dataset.id }); }
   },
   payDay: el => { S.payDay = el.dataset.v === '' ? null : +el.dataset.v; render(); },
-  reserve: reserveForm, aptInfo: aptInfoForm, weekGoal: weekGoalForm, editProfile: profileForm,
+  reserve: () => reserveForm(), resMov: el => { const m = (D().reserve.mov || []).find(x => x.id === el.dataset.id); if (m) reserveForm(m); }, aptInfo: aptInfoForm, weekGoal: weekGoalForm, editProfile: profileForm,
   invOff: el => { S.invOff = +el.dataset.v; render(); },
   editCard: el => cardForm(el.dataset.id), newBuy: el => buyForm({ card: el.dataset.id || '' }), editBuy: el => buyForm({ id: el.dataset.id }),
   togInv: el => { const c = D().cards.find(x => x.id === el.dataset.id); c.paid = c.paid || {}; if (c.paid[S.ym]) delete c.paid[S.ym]; else c.paid[S.ym] = true; commit(c.paid[S.ym] ? 'Fatura marcada como paga' : 'Fatura reaberta'); },
