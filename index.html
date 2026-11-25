@@ -983,6 +983,9 @@ svg.o3{display:block;overflow:visible;filter:drop-shadow(0 8px 10px rgba(36,35,4
 .tt-t tr.hl td{background:var(--lilas);font-weight:700}.tt-t tr.tot td{border-top:1px solid var(--ln2);font-weight:700}
 .g3tip{max-width:320px}
 @media(max-width:760px){.gst{grid-template-columns:1fr 1fr}}
+
+.tt-t th+th,.tt-t td+td{padding-left:10px}
+@media(max-width:760px){.wkv{display:none}}
 </style>
 </head>
 <body>
@@ -2258,7 +2261,7 @@ function cResumo(b) {
     <div class="rz-real"><div class="grow"><div class="lbl">Saldo realizado <span class="mu">· pela data do pagamento</span></div><div class="md2 tnum ${k.sobra < 0 ? 'neg' : 'pos'}">${R(k.sobra)}</div></div><div class="xs mu" style="text-align:right">entrou <b class="tnum">${R(k.inc)}</b><br>saiu <b class="tnum">${R(k.out)}</b></div></div>
    </div><div class="rz-grid">
     ${tile('💵', 't-renda', 'Receitas', R(b.inc), `${nIn} lançamento${nIn === 1 ? '' : 's'}`, 'data-act="nav" data-p="fin"', 'pos')}
-    ${tile('💸', 't-desp', 'Despesas', R(b.spent), `${b.outs.length} conta${b.outs.length === 1 ? '' : 's'} no mês`, 'data-act="nav" data-p="fin"')}
+    ${tile('💸', 't-desp', 'Despesas', R(b.spent), `${b.outs.length} conta${b.outs.length === 1 ? '' : 's'} no mês`, 'data-act="nav" data-p="fin"', 'neg')}
     ${tile('🧾', 't-alert', 'Contas a pagar', R(aPagar), `${pend.length + prev.length} pendente${pend.length + prev.length === 1 ? '' : 's'}${prev.length ? ` · ${prev.length} de meses anteriores` : ''}`, 'data-act="nav" data-p="fin"', aPagar > 0 ? 'warn' : '')}
     ${tile('🐷', 't-res', 'Reserva', R(reserveBal(d)), 'saldo atual · toque para movimentar', 'data-act="reserve"')}
    </div></div></section>`;
@@ -2365,7 +2368,7 @@ function vFin() {
   <div class="rowf wrap between mt8"><div class="tabs" style="max-width:100%;overflow-x:auto">${tabs.map(([k, l]) => `<button class="${S.finTab === k ? 'on' : ''}" data-act="finTab" data-v="${k}">${l}</button>`).join('')}</div>
    <div class="rowf wrap"><select class="inp" style="width:auto;padding:7px 32px 7px 12px" data-act="finCat" aria-label="Filtrar categoria"><option value="">Todas as categorias</option>${d.cats.map(c => `<option value="${c.id}" ${S.finCat === c.id ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select><label class="search"><span>${ic('search', 's')}</span><input id="finQ" placeholder="Buscar lançamento" value="${esc(S.finQ)}"></label></div></div>
   ${rows.length ? `<div class="tbl-w mt12"><table class="tbl"><thead><tr><th></th><th>Dia</th><th>Descrição</th><th>Categoria</th><th>Status</th><th class="r">Valor</th><th></th></tr></thead><tbody>${tr}</tbody></table></div>` : `<div class="mt12">${emptyBox('receipt', b.items.length ? 'Nada encontrado' : 'Nenhum lançamento neste mês', b.items.length ? 'Ajuste os filtros para ver outros lançamentos.' : 'Cadastre sua renda, contas e despesas.', b.items.length ? '' : 'Novo lançamento', 'add', 'data-v="tx"')}</div>`}</section>
-  <section class="card s8"><div class="ch"><span class="ttl">${emo('📈')}Últimos 6 meses</span><span class="grow"></span><span class="xs mu rowf"><span class="dot" style="background:var(--g-sobra)"></span> Receitas <span class="dot" style="background:var(--bl);margin-left:8px"></span> Saídas</span></div><div class="mt12">${trend.some(t => t.a || t.b) ? dualChart(trend) : emptyBox('trend', 'Sem histórico ainda', 'Os gráficos aparecem conforme você registra lançamentos.')}</div></section>
+  <section class="card s8"><div class="ch"><span class="ttl">${emo('📈')}Últimos 6 meses</span><span class="grow"></span><span class="xs mu rowf"><span class="dot" style="background:#36B89A"></span> Receitas <span class="dot" style="background:#EF6573;margin-left:8px"></span> Saídas</span></div><div class="mt12">${trend.some(t => t.a || t.b) ? dualChart(trend) : emptyBox('trend', 'Sem histórico ainda', 'Os gráficos aparecem conforme você registra lançamentos.')}</div></section>
   <section class="card s4"><div class="ch"><span class="ttl">${emo('🏷️')}Gastos por categoria</span></div><div class="mt8">${cl.length ? cl.slice(0, 7).map(r => `<div class="cat-row" style="flex-wrap:wrap"><span class="sq" style="background:${r.c.color}"></span>${esc(r.c.name)}<span class="v">${R(r.v)}</span><div style="flex-basis:100%">${pbar(b.spent ? r.v / b.spent * 100 : 0)}</div></div>`).join('') : emptyBox('tag', 'Sem despesas', 'Nenhuma saída neste mês.')}</div></section></div>`;
 }
 
@@ -5085,7 +5088,7 @@ function cGastos(cls = 's12', compacto = false) {
     <div class="gst mt12">${GST_ORD.map(tile).join('')}</div>
     <div class="xs mu mt8">Situação de cada pagamento = uso acumulado pago da categoria no mês do pagamento, até aquele pagamento, sobre o limite daquele mês. ${g.incompleto ? 'Período em andamento: a comparação usa o mesmo número de dias do período anterior. ' : ''}${g.semData.length ? g.semData.length + ' pagamento(s) sem data efetiva (' + R(sum(g.semData.map(x => x.val))) + ') ficam fora das barras.' : ''}</div>
     <div class="rowf wrap mt12"><button class="btn sm" data-act="g3semana">${ic('receipt', 's')} Lançamentos do período</button></div>`;
-  return `<section class="card ${cls} c-wk ${compacto ? 'cmp' : ''}">${compacto ? '' : illus('coins')}<div class="ch"><span class="ttl">${esc(per.l)}</span><span class="grow"></span>${compacto ? `<button class="ib" data-act="g3fin" data-v="fluxo" aria-label="Ver detalhamento">${ic('right', 's')}</button>` : ''}</div>
+  return `<section class="card ${cls} c-wk ${compacto ? 'cmp' : ''}">${compacto ? '' : `<div class="ill o3w" aria-hidden="true">${obj3d('coins', 64)}</div>`}<div class="ch"><span class="ttl">${esc(per.l)}</span><span class="grow"></span>${compacto ? `<button class="ib" data-act="g3fin" data-v="fluxo" aria-label="Ver detalhamento">${ic('right', 's')}</button>` : ''}</div>
   <div class="lbl">Pela data efetiva do pagamento. Fatura de cartão conta uma vez; compras do cartão não.</div>
   <div class="rowf wrap mt8" style="gap:10px;align-items:baseline"><span class="${compacto ? 'md2' : 'mid'} tnum neg">${R(g.total)}</span>${cmpChip(g.total, g.prev, compacto ? 'semana passada' : rot)}</div>${nav}
   <div class="mt12">${barrasGastos(g, compacto)}</div>
@@ -5517,7 +5520,7 @@ function cFitHero() {
   const ciDays = new Set((d.activity || []).filter(a => (a.date || '').slice(0, 7) === ym).map(a => a.date)).size, wkDays = new Set(f.month.map(w => w.date)).size;
   const s4 = dateAdd(T, -27), freq = new Set(d.workouts.filter(w => w.date >= s4 && w.date <= T).map(w => w.date)).size / 4;
   const fut = f.month.filter(w => w.type === 'futevolei').length, wp = f.goal ? pct(f.week.length, f.goal) : 0;
-  const exs = pd && pd.ex ? pd.ex.slice(0, 4) : [], grp = pd ? [...new Set((pd.ex || []).map(e => e.grp || muscleFor(e.name)).filter(Boolean))].slice(0, 3) : [];
+  const exs = pd && pd.ex ? pd.ex.slice(0, 4) : [], grp = [...new Set((st.ws.length ? st.ws.flatMap(w => (w.ex || []).map(e => e.grp || muscleFor(e.name))) : pd ? (pd.ex || []).map(e => e.grp || muscleFor(e.name)) : []).filter(Boolean))].slice(0, 3);
   const stc = { ok: 'ok', pend: 'am', rest: 'mu', fut: 'mu', none: '' }[st.k];
   const stt = (e, v, l) => `<div><span class="emo" aria-hidden="true">${e}</span><b class="tnum">${v}</b><small>${l}</small></div>`;
   return `<section class="card fhero"><div class="fh-main"><div class="fh-e" aria-hidden="true">${obj3d('dumbbell', 92)}</div><div class="grow" style="min-width:200px">
