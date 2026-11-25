@@ -993,6 +993,79 @@ svg.o3{display:block;overflow:visible;filter:drop-shadow(0 8px 10px rgba(36,35,4
 .ft-o .ios-emoji{font-size:30px}.c-alstrip>.ios-emoji{font-size:28px}
 .g3note.az{background:color-mix(in srgb,var(--azul) 10%,var(--card))}
 .ft-o{display:flex;align-items:center}
+/* ===== Fitness 4: fichas com emoji, demonstrações e treino guiado ===== */
+.exlist{display:flex;flex-direction:column;margin-top:10px}
+.f4r{display:grid;grid-template-columns:22px 64px minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 0;border-top:1px solid var(--ln)}
+.f4r:first-child{border-top:0}
+.f4r .ord{text-align:center;font-weight:800;color:var(--mu2);font-size:12px}
+.exi .exn{font-weight:700;font-size:15px;color:var(--tx);text-align:left;padding:0}
+.exi .meta{display:flex;flex-wrap:wrap;gap:3px 12px;font-size:12.5px;color:var(--mu);margin-top:4px}
+.exi .meta b{color:var(--tx);font-weight:700}
+.exi .f4nt{font-size:12px;color:var(--mu);margin-top:5px;padding-left:9px;border-left:2px solid var(--lilas)}
+.exs{display:flex;align-items:center;gap:2px}
+.cdot{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--ln2);margin-right:4px}
+.cdot.ok{background:var(--teal);border-color:var(--teal)}.cdot.ok svg{width:13px;height:13px;stroke:#fff;stroke-width:3}
+.cdot.f4pend{border-color:var(--ambar)}
+.f4th{position:relative;width:64px;height:64px;border-radius:16px;overflow:hidden;background:#fff;border:1px solid var(--ln);padding:0;display:grid;place-items:center;cursor:pointer;flex:none;transition:transform .15s var(--ease)}
+.f4th:hover{transform:scale(1.04)}.f4th:focus-visible{outline:2.5px solid var(--roxo);outline-offset:2px}
+.f4th img{width:100%;height:100%;object-fit:cover;display:block}
+.f4th .f4th-p{position:absolute;right:4px;bottom:4px;width:20px;height:20px;border-radius:50%;background:rgba(36,35,41,.72);display:grid;place-items:center}
+.f4th .f4th-p svg{width:10px;height:10px;stroke:#fff;fill:#fff}
+.f4th.f4ph{background:var(--sub);cursor:default;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--mu)}
+.f4th.f4ph:hover{transform:none}.f4th.f4ph svg{width:20px;height:20px;stroke:var(--mu2)}
+.f4th.f4ph .f4ph-t{font-size:9.5px;font-weight:700;letter-spacing:.02em;text-align:center;line-height:1.15;padding:0 4px}
+.f4th.f4ph.f4pend{cursor:pointer;border:1.5px dashed var(--ambar);color:var(--am)}.f4th.f4ph.f4pend svg{stroke:var(--am)}
+.dmini{width:36px;height:36px;border-radius:10px;object-fit:cover;background:#fff;border:1px solid var(--ln);flex:none;display:block}
+.dmini.f4ph{display:grid;place-items:center;background:var(--sub)}.dmini.f4ph svg{width:16px;height:16px;stroke:var(--mu2)}
+.dmini-w{flex:none}
+.fh-ex2{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+.fh-ex2 .f4x{display:flex;gap:8px;align-items:center;background:var(--sub);border-radius:14px;padding:5px 10px 5px 5px;font-size:12.5px}
+.fh-ex2 .f4x b{display:block;font-weight:700}.fh-ex2 .f4x small{color:var(--mu);font-size:11.5px}
+.fh-t .emo,.md2 .emo,.fc-w .emo{font-size:.92em;vertical-align:-.08em;margin-right:.28em}
+.ttl .emo+*,.exi .emo{margin-left:0}
+/* semana: emoji da ficha em círculo neutro (sem pastilha colorida) */
+.wd-b.has-e .d{background:var(--card);border:2px solid var(--ln2);color:var(--tx);position:relative;overflow:visible}
+.wd-b.has-e .d .emo{font-size:19px}
+.wd-b.has-e.st-ok .d{border-color:var(--teal);background:var(--card)}
+.wd-b.has-e.st-pend .d{border-color:var(--ambar);background:var(--card)}
+.wd-b.has-e.st-fut .d{border:2px dashed var(--ln2);background:none}.wd-b.has-e.st-fut .d .emo{opacity:.55}
+.wd-b .d .f4bdg{position:absolute;right:-4px;top:-4px;min-width:17px;height:17px;padding:0 3px;border-radius:99px;background:var(--teal);color:#fff;font-size:10px;font-weight:800;display:grid;place-items:center;border:2px solid var(--card)}
+.wd-b .d .f4bdg svg{width:9px;height:9px;stroke:#fff;stroke-width:3.5}
+/* calendário: emoji ao lado do nome */
+.dc .ece{display:flex;align-items:center;gap:3px;min-width:0}.dc .ece .emo{font-size:13px;flex:none}
+@media(max-width:600px){.dc .ece .ec{display:none}.dc .ece .emo{font-size:15px}}
+/* treino guiado */
+.foco .fc-w{font-weight:800;font-size:17px}
+.fsegs{display:flex;gap:4px;margin-top:14px}
+.fseg{flex:1;height:7px;border-radius:99px;background:var(--sub2);border:0;padding:0;cursor:pointer}
+.fseg.ok{background:var(--teal)}.fseg.cur{background:var(--roxo)}.fseg.cur.ok{background:var(--teal);box-shadow:0 0 0 2px var(--card),0 0 0 3.5px var(--roxo)}
+.foco .tx{color:var(--tx)}
+.fc-grid{display:grid;grid-template-columns:minmax(260px,420px) minmax(0,1fr);gap:22px;margin-top:16px;align-items:start}
+.fc-media{position:relative;background:#fff;border-radius:24px;overflow:hidden;aspect-ratio:1;border:1px solid var(--ln)}
+.fc-media img{width:100%;height:100%;object-fit:contain;display:block}
+.fc-zoom{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.92);color:#242329;box-shadow:0 4px 12px -6px rgba(0,0,0,.3)}
+.fc-media.f4ph{display:grid;place-items:center;text-align:center;background:var(--sub);padding:20px;color:var(--mu)}
+.fc-media.f4ph svg{width:36px;height:36px;stroke:var(--mu2)}
+.fc-note{background:var(--sub);border-radius:16px;padding:12px 14px;font-size:13px}.fc-note b{display:block;font-size:12px;color:var(--mu);margin-bottom:2px}
+.fc-name{font-size:22px;font-weight:800;letter-spacing:-.01em;line-height:1.2}
+.fsh,.fset{display:grid;grid-template-columns:34px minmax(0,1fr) minmax(0,1fr) minmax(0,.8fr) 44px;gap:8px;align-items:center}
+.fsh{font-size:10.5px;color:var(--mu);font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:0 6px}
+.fset{padding:6px;border-radius:16px;margin-top:6px;background:var(--sub)}
+.fset .n{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:13px;background:var(--card)}
+.fset.ok .n{background:var(--teal);color:#fff}
+.fset .ref{font-size:12.5px;color:var(--mu)}
+.fset .inp{height:42px;text-align:center;padding:0 6px;min-width:0}
+.fset .chk{width:40px;height:40px}.fset .chk svg{width:18px;height:18px}
+.fset .chk.on{background:var(--teal);border-color:var(--teal);box-shadow:0 4px 10px -4px var(--teal)}
+.fc-next{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:16px;border:1px solid var(--ln);margin-top:14px}
+.fc-nav{display:flex;gap:8px;margin-top:12px}.fc-nav .btn{flex:1;justify-content:center;min-height:46px}
+.fc-nav .btn[disabled]{opacity:.45;pointer-events:none}
+.demo-big{background:#fff;border-radius:20px;overflow:hidden;width:100%;max-width:min(56vh,560px);margin:0 auto;aspect-ratio:1;border:1px solid var(--ln)}
+.demo-big img{width:100%;height:100%;object-fit:contain;display:block}
+@media(max-width:760px){.fc-grid{grid-template-columns:1fr;gap:14px}.fc-media{max-width:340px;margin:0 auto;width:100%}.fc-name{font-size:19px}
+  .f4r{grid-template-columns:56px minmax(0,1fr) auto;gap:10px}.f4r .ord{display:none}.f4th{width:56px;height:56px;border-radius:14px}
+  .exs .ib{width:34px;height:34px}.fsh,.fset{grid-template-columns:30px minmax(0,.9fr) minmax(0,1fr) minmax(0,.8fr) 42px;gap:6px}.fset .ref{font-size:11.5px}}
+@media(prefers-reduced-motion:reduce){.f4th{transition:none}}
 </style>
 </head>
 <body>
@@ -2209,7 +2282,7 @@ function cFitness() {
   const chart = f.wts.length > 1 ? lineChart(f.wts.map(b => ({ l: MON3[+b.date.slice(5, 7) - 1], v: b.kg })), { h: 120, color: '#5095E8', fmt: v => N(v, 1), target: goalW ? +goalW.target : null, targetLabel: 'Meta' }) : '';
   return `<section class="card s8">${illus('dumbbell', 't')}<div class="ch"><span class="ttl">Fitness${pgName ? ` <small>${esc(pgName)}</small>` : ''}</span></div>
   <div class="rowf mt12" style="gap:28px;align-items:flex-start;flex-wrap:wrap">
-   <div style="flex:1;min-width:260px"><div class="rowf between"><div><div class="md2">${f.week.length}${f.goal ? `<small class="mu" style="font-size:14px;font-weight:600"> / ${f.goal}</small>` : ''}</div><div class="lbl">treinos nesta semana${lastW ? ' · último: ' + esc(wLabel(lastW)) + ' (' + fdate(lastW.date).slice(0, 5) + ')' : ''}</div></div>${f.goal ? '' : `<button class="btn sm" data-act="weekGoal">Definir meta</button>`}</div>
+   <div style="flex:1;min-width:260px"><div class="rowf between"><div><div class="md2">${f.week.length}${f.goal ? `<small class="mu" style="font-size:14px;font-weight:600"> / ${f.goal}</small>` : ''}</div><div class="lbl">treinos nesta semana${lastW ? ' · último: ' + emo(W_EMO(lastW)) + ' ' + esc(wLabel(lastW)) + ' (' + fdate(lastW.date).slice(0, 5) + ')' : ''}</div></div>${f.goal ? '' : `<button class="btn sm" data-act="weekGoal">Definir meta</button>`}</div>
    <div class="dwk">${dw}</div>${f.goal ? `<div class="mt12">${pbar(pct(f.week.length, f.goal), 't')}</div>` : ''}</div>
    ${chart ? `<div style="flex:1.1;min-width:260px;margin-top:34px"><div class="lbl">Evolução do peso</div>${chart}</div>` : ''}</div>
   <div class="kpis mt16"><div class="kpi"><div class="l">${ic('flame', 's')} Sequência</div><div class="n">${f.streak}<small> dia${f.streak === 1 ? '' : 's'}</small></div></div><div class="kpi"><div class="l">${ic('activity', 's')} Treinos no mês</div><div class="n">${f.month.length}</div></div><div class="kpi"><div class="l">${ic('scale', 's')} Peso atual</div><div class="n">${w ? N(w.kg, 1) : '—'}<small> kg</small></div>${w && f.wts.length > 1 ? `<div class="s ${wDeltaCls(delta, goalW, f.first && f.first.kg)}">${delta > 0 ? '+' : ''}${N(delta, 1)} kg desde o início</div>` : ''}</div>${today ? `<div class="kpi"><div class="l">${ic('calendar', 's')} Próximo treino · ${today.when}</div><div class="n" style="font-size:15px;line-height:1.25">${esc(today.name)}</div></div>` : ''}</div>
@@ -2618,7 +2691,7 @@ function vFit() {
 
 
 /* ---------- Fitness: destaque do dia (só apresentação dos dados existentes) ---------- */
-const W_EMO = w => w.type === 'futevolei' ? '🏐' : w.type === 'cardio' ? (/camin/i.test(w.kind || w.name || '') ? '🚶‍♀️' : /bike|bicic|cicl|pedal/i.test(w.kind || w.name || '') ? '🚴‍♀️' : '🏃‍♀️') : w.type === 'musculacao' ? '🏋️‍♀️' : '💪';
+const W_EMO = w => fichaEmo(w);
 function ring(p, col, size, label) {
   const r = 38, c = 2 * Math.PI * r;
   return `<svg class="ring" viewBox="0 0 92 92" width="${size}" height="${size}" role="img" aria-label="${esc(label)}"><circle cx="46" cy="46" r="${r}" fill="none" stroke="var(--ringbg)" stroke-width="9"/><circle class="rg" cx="46" cy="46" r="${r}" fill="none" stroke="${col}" stroke-width="9" stroke-linecap="round" stroke-dasharray="${(c * clamp(p, 0, 100) / 100).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 46 46)"/></svg>`;
@@ -2634,24 +2707,10 @@ function cPrograma() {
   <div class="lbl">${p.pro ? 'Profissional: ' + esc(p.pro) + ' · ' : ''}${fdate(p.start)} a ${fdate(p.end)}${p.goal ? ' · ' + esc(p.goal) : ''}</div>
   <div class="mt12" style="max-width:520px">${pbar(done / total * 100, 't')}<div class="lbl mt4">${st === 'andamento' ? `Dia ${done} de ${total}` : st === 'planejado' ? 'Começa em ' + fdate(p.start) : 'Programa encerrado — todo o histórico foi mantido'}</div></div>
   <div class="kpis mt16"><div class="kpi"><div class="l">Planejados</div><div class="n">${a.planned}</div></div><div class="kpi"><div class="l">Realizados</div><div class="n">${a.realized}</div>${a.extras ? `<div class="s">+${a.extras} extra${a.extras > 1 ? 's' : ''}</div>` : ''}</div><div class="kpi"><div class="l">Aderência</div><div class="n">${a.pct}<small>%</small></div></div><div class="kpi"><div class="l">${ic('calendar', 's')} Últimas 4 semanas</div><div class="n">${last4Weeks(d)}<small> dias</small></div><div class="s">Você treinou ${last4Weeks(d)} dias nas últimas 4 semanas.</div></div></div>
-  <div class="rowf wrap mt16">${cur ? `<button class="btn pri sm" data-act="resumeSess" data-id="${cur.id}">${ic('play', 's')} Retomar treino</button>` : day && day.kind !== 'descanso' && !tw ? `<button class="btn pri sm" data-act="startSess" data-pid="${p.id}" data-did="${day.id}">${ic('play', 's')} Iniciar treino: ${esc(day.name)}</button>` : day && day.kind === 'descanso' ? '<span class="pill">Hoje: descanso</span>' : tw ? '<span class="pill gr">Treino de hoje registrado</span>' : ''}<button class="btn sm" data-act="fitTab" data-v="programa">Ver programa ${ic('right', 's')}</button></div></section>`;
+  <div class="rowf wrap mt16">${cur ? `<button class="btn pri sm" data-act="resumeSess" data-id="${cur.id}">${ic('play', 's')} Retomar treino</button>` : day && day.kind !== 'descanso' && !tw ? `<button class="btn pri sm" data-act="startSess" data-pid="${p.id}" data-did="${day.id}">${ic('play', 's')} Iniciar treino: ${emo(fichaEmo(day))} ${esc(day.name)}</button>` : day && day.kind === 'descanso' ? '<span class="pill">Hoje: descanso</span>' : tw ? '<span class="pill gr">Treino de hoje registrado</span>' : ''}<button class="btn sm" data-act="fitTab" data-v="programa">Ver programa ${ic('right', 's')}</button></div></section>`;
 }
 
 /* ---------- PROGRAMA ---------- */
-function exPlanRow(p, day, e) {
-  const st = exStats(exKey(e.name)), planned = (e.sets ? e.sets + '×' : '') + (e.reps || '—') + (e.kg ? ' · ' + N(e.kg, 1) + ' kg' : '');
-  return `<tr><td><button class="lnk" data-act="exModal" data-key="${esc(exKey(e.name))}">${esc(e.name)}</button>${e.grp ? `<div class="xs mu">${esc(e.grp)}</div>` : ''}${e.note ? `<div class="xs mu">${esc(e.note)}</div>` : ''}</td><td>${esc(planned)}</td>
-  <td class="r tnum">${st.prev ? N(st.prev.kg, 1) + ' kg' : '—'}</td><td class="r tnum fw6">${st.last ? N(st.last.kg, 1) + ' kg' : '—'}</td><td class="r tnum">${st.max ? N(st.max, 1) + ' kg' : '—'}</td>
-  <td class="r"><div class="actions">${editBtn('exPlanEdit', e.id).replace('data-id=', `data-pid="${p.id}" data-did="${day.id}" data-id=`)}<button class="ib" data-act="exPlanDel" data-pid="${p.id}" data-did="${day.id}" data-id="${e.id}" aria-label="Remover">${ic('trash', 's')}</button></div></td></tr>`;
-}
-function vDia(p, day) {
-  const cur = inProgress(), same = cur && cur.dayId === day.id && cur.date === todayISO();
-  return `<section class="card"><div class="rowf wrap between"><div class="rowf"><button class="ib bord" data-act="closeDay" aria-label="Voltar">${ic('left', 's')}</button><div><div class="md2">${WDL[day.wd]} · ${esc(day.name)}</div><div class="lbl">${esc(p.name)}${p.pro ? ' · ' + esc(p.pro) : ''} · ${fdate(p.start)} a ${fdate(p.end)}</div></div></div>
-   <div class="rowf wrap">${day.kind === 'descanso' ? '' : `<button class="btn pri sm" data-act="startSess" data-pid="${p.id}" data-did="${day.id}">${ic('play', 's')} ${same ? 'Retomar treino' : 'Iniciar treino'}</button>`}<button class="btn sm" data-act="dayEdit" data-pid="${p.id}" data-id="${day.id}">${ic('pencil', 's')} Editar dia</button></div></div>
-  ${day.kind === 'descanso' ? `<div class="mt16">${emptyBox('moon', 'Dia de descanso', 'Nenhum treino previsto neste dia.')}</div>` : day.kind === 'futevolei' ? `<div class="mt16">${emptyBox('activity', 'Futevôlei', 'Use "Iniciar treino" para registrar data, horário, duração e intensidade.')}</div>` : `
-  <div class="rowf between mt16"><span class="ttl">Exercícios</span><button class="btn sm" data-act="exPlanEdit" data-pid="${p.id}" data-did="${day.id}">${ic('plus', 's')} Adicionar exercício</button></div>
-  ${day.ex.length ? `<div class="tbl-w mt8"><table class="tbl"><thead><tr><th>Exercício</th><th>Previsto</th><th class="r">Anterior</th><th class="r">Última</th><th class="r">Maior</th><th></th></tr></thead><tbody>${day.ex.map(e => exPlanRow(p, day, e)).join('')}</tbody></table></div>` : `<div class="mt8">${emptyBox('dumbbell', 'Nenhum exercício neste treino', 'Adicione os exercícios passados pela sua professora. Cargas e repetições ficam vazias até você preencher.', 'Adicionar exercício', 'exPlanEdit', `data-pid="${p.id}" data-did="${day.id}"`)}</div>`}`}</section>`;
-}
 function vPrograma() {
   const d = D(), progs = sortedProgs(d);
   if (!progs.length) return `<section class="card">${emptyBox('dumbbell', 'Nenhum programa de treino', 'Cadastre o programa da sua professora.', 'Novo programa', 'progForm')}</section>`;
@@ -2669,7 +2728,7 @@ function vPrograma() {
    <div class="kpis mt12"><div class="kpi"><div class="l">Treinos planejados</div><div class="n">${a.planned}</div></div><div class="kpi"><div class="l">Realizados</div><div class="n">${a.realized}</div></div><div class="kpi"><div class="l">Perdidos</div><div class="n">${a.missed}</div></div><div class="kpi"><div class="l">Aderência</div><div class="n">${a.pct}<small>%</small></div></div></div>
    <div class="rowf wrap mt16"><button class="btn sm pri" data-act="progForm">${ic('plus', 's')} Novo programa</button><button class="btn sm" data-act="progEdit" data-id="${p.id}">${ic('pencil', 's')} Editar</button>${st === 'concluido' && p.closed ? `<button class="btn sm" data-act="progReopen" data-id="${p.id}">Reabrir programa</button>` : st === 'andamento' ? `<button class="btn sm" data-act="progClose" data-id="${p.id}">Encerrar programa</button>` : ''}<button class="btn sm gh dng" data-act="del" data-t="prog" data-id="${p.id}">${ic('trash', 's')} Excluir</button></div></section>
   ${day ? `<div class="s12">${vDia(p, day)}</div>` : `<section class="card s12"><div class="rowf between mb8"><span class="ttl">Rotina semanal</span><button class="btn sm" data-act="dayEdit" data-pid="${p.id}">${ic('plus', 's')} Dia</button></div>
-   <div class="cardlist" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr))">${days.map(x => { const ts = x.wd === parseD(todayISO()).getDay() && st === 'andamento'; return `<div class="goal clk" data-act="dayOpen" data-id="${x.id}" style="cursor:pointer;${ts ? 'border-color:var(--bl)' : ''}"><div class="rowf between"><span class="pill ${ts ? 'bl' : ''}">${WD3[x.wd]}${ts ? ' · hoje' : ''}</span><span class="pill">${KIND_L[x.kind] || x.kind}</span></div><b class="fw7">${esc(x.name)}</b><div class="lbl">${x.kind === 'musculacao' ? x.ex.length + ' exercício' + (x.ex.length === 1 ? '' : 's') : x.kind === 'descanso' ? 'Sem treino' : 'Registro rápido'}</div>${x.kind !== 'descanso' && ts && !tw && !cur ? `<button class="btn sm pri" data-act="startSess" data-pid="${p.id}" data-did="${x.id}">${ic('play', 's')} Iniciar</button>` : ''}</div>`; }).join('')}</div></section>`}
+   <div class="cardlist" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr))">${days.map(x => { const ts = x.wd === parseD(todayISO()).getDay() && st === 'andamento'; return `<div class="goal clk" data-act="dayOpen" data-id="${x.id}" style="cursor:pointer;${ts ? 'border-color:var(--bl)' : ''}"><div class="rowf between"><span class="pill ${ts ? 'bl' : ''}">${WD3[x.wd]}${ts ? ' · hoje' : ''}</span><span class="pill">${KIND_L[x.kind] || x.kind}</span></div><b class="fw7">${emo(fichaEmo(x))} ${esc(x.name)}</b><div class="lbl">${x.kind === 'musculacao' ? x.ex.length + ' exercício' + (x.ex.length === 1 ? '' : 's') : x.kind === 'descanso' ? 'Sem treino' : 'Registro rápido'}</div>${x.kind !== 'descanso' && ts && !tw && !cur ? `<button class="btn sm pri" data-act="startSess" data-pid="${p.id}" data-did="${x.id}">${ic('play', 's')} Iniciar</button>` : ''}</div>`; }).join('')}</div></section>${cDemos(p)}`}
   <section class="card s12"><div class="rowf between mb8"><span class="ttl">Todos os programas</span></div><div class="tbl-w"><table class="tbl"><thead><tr><th>Programa</th><th>Período</th><th>Status</th><th class="r">Treinos</th><th class="r">Aderência</th><th></th></tr></thead><tbody>${progs.map(x => { const mm = progMetrics(x, d); return `<tr><td><b class="fw6">${esc(x.name)}</b>${x.pro ? `<div class="xs mu">${esc(x.pro)}</div>` : ''}</td><td>${fdate(x.start)} – ${fdate(x.end)}</td><td>${progPill(x)}</td><td class="r tnum">${mm.ws}</td><td class="r tnum">${mm.adh.pct}%</td><td class="r"><button class="btn sm" data-act="progPick" data-id="${x.id}">Abrir</button></td></tr>`; }).join('')}</tbody></table></div></section>
   ${progs.length > 1 ? `<section class="card s12"><div class="rowf wrap between mb8"><span class="ttl">Comparar programas</span><div class="rowf wrap"><select class="inp" style="width:auto;padding-right:34px" data-act="cmpSel" data-w="A" aria-label="Programa A">${progs.map(x => `<option value="${x.id}" ${x.id === cmpA.id ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select><span class="mu">vs.</span><select class="inp" style="width:auto;padding-right:34px" data-act="cmpSel" data-w="B" aria-label="Programa B">${progs.map(x => `<option value="${x.id}" ${x.id === cmpB.id ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select></div></div>
    <div class="tbl-w"><table class="tbl"><thead><tr><th></th><th class="r">${esc(cmpA.name)}</th><th class="r">${esc(cmpB.name)}</th><th class="r">Diferença</th></tr></thead><tbody>
@@ -2700,12 +2759,12 @@ function exCard(w, e, i, editable) {
   const nd = exDone(e).length;
   return `<div class="exc"><div class="hd" data-act="exOpen" data-i="${i}" style="cursor:pointer"><button class="chk ${e.done ? 'on' : ''}" data-act="exDone" data-i="${i}" role="checkbox" aria-checked="${!!e.done}" aria-label="Exercício ${esc(e.name)} concluído">${ic('check')}</button><div class="grow"><b class="${e.done ? 'mu' : ''}" style="${e.done ? 'text-decoration:line-through' : ''}">${esc(e.name)}</b><div class="xs mu">${nd} de ${sets.length || e.sets || 0} séries${exVolume(e) ? ' · ' + N(exVolume(e), 0) + ' kg de volume' : ''}</div></div><span id="exs-pill-${i}">${cmpPill(cmpEntry(entryOfEx(w, e), prevOf(k, w.id)))}</span>${ic(open ? 'down' : 'right', 's')}</div>${body}${open ? `<div class="bd" style="border-top:0;padding-top:0"><div class="lbl" id="exs-${i}">${exSummaryHTML(w, e)}</div></div>` : ''}</div>`;
 }
-function vSessao() {
+function vSessaoLista() {
   const d = D(), w = d.workouts.find(x => x.id === S.sessId); if (!w) return '';
   const run = w.status === 'andamento', m = sessMeta(w), p = d.programs.find(x => x.id === w.programId);
   if (!S.sessOpen) S.sessOpen = {}; if (run && !Object.keys(S.sessOpen).length && w.ex.length) S.sessOpen[0] = true;
   const mins = w.startedAt ? Math.max(0, Math.round(((w.endedAt || Date.now()) - w.startedAt) / 60000)) : w.dur || 0;
-  return `<section class="card"><div class="rowf wrap between"><div class="rowf"><button class="ib bord" data-act="fitTab" data-v="programa" aria-label="Voltar">${ic('left', 's')}</button><div><div class="md2">${esc(wLabel(w))}</div><div class="lbl">${p ? esc(p.name) + ' · ' : ''}${fdate(w.date)}${w.time ? ' às ' + w.time : ''}${mins ? ' · ' + mins + ' min' : ''}</div></div></div>
+  return `<section class="card"><div class="rowf wrap between"><div class="rowf"><button class="ib bord" data-act="fitTab" data-v="programa" aria-label="Voltar">${ic('left', 's')}</button><div><div class="md2">${emo(fichaEmo(w))} ${esc(wLabel(w))}</div><div class="lbl">${p ? esc(p.name) + ' · ' : ''}${fdate(w.date)}${w.time ? ' às ' + w.time : ''}${mins ? ' · ' + mins + ' min' : ''}</div></div></div>
    <div class="rowf wrap">${run ? `<button class="btn sm gh dng" data-act="cancelSess">Cancelar treino</button><button class="btn sm pri" data-act="finishSess">${ic('check', 's')} Finalizar treino</button>` : `<span class="pill gr">Concluído</span><button class="btn sm" data-act="reopenSess" data-id="${w.id}">Reabrir para editar</button>`}</div></div>
    <div class="mt16"><div class="rowf between sm"><b id="sessProg">${m.nd} de ${m.total} exercícios concluídos</b><span class="mu" id="sessVol">${m.vol ? 'Volume: ' + N(m.vol, 0) + ' kg' : ''}</span></div><div class="mt8" id="sessBar">${pbar(m.total ? m.nd / m.total * 100 : 0, 't lg')}</div></div>
    <div class="mt16">${w.ex.length ? w.ex.map((e, i) => exCard(w, e, i, run)).join('') : emptyBox('dumbbell', 'Nenhum exercício neste treino', 'Adicione os exercícios que você fez.', '', '')}</div>
@@ -2737,7 +2796,7 @@ function vHistorico() {
   const fl = [['all', 'Todos'], ['musculacao', 'Academia'], ['futevolei', 'Futevôlei'], ['cardio', 'Cardio'], ['outro', 'Outro']];
   return `<section class="card"><div class="rowf wrap between"><span class="ttl">Histórico Fitness <small>${ws.length} atividade${ws.length === 1 ? '' : 's'}</small></span><div class="rowf wrap"><select class="inp" style="width:auto;padding-right:34px" data-act="histProg" aria-label="Filtrar por programa"><option value="">Todos os programas</option>${sortedProgs(d).map(p => `<option value="${p.id}" ${S.histProg === p.id ? 'selected' : ''}>${esc(p.name)}</option>`).join('')}</select><button class="btn sm pri" data-act="add" data-v="workout">${ic('plus', 's')} Novo treino</button></div></div>
   <div class="fchips mt12">${fl.map(([k, l]) => `<button class="fchip ${S.histF === k ? 'on' : ''}" data-act="histF" data-v="${k}">${l}</button>`).join('')}</div>
-  ${ws.length ? `<div class="tbl-w mt12"><table class="tbl"><thead><tr><th>Data</th><th>Horário</th><th>Tipo</th><th>Treino</th><th>Programa</th><th class="r">Duração</th><th></th></tr></thead><tbody>${ws.map(w => { const p = d.programs.find(x => x.id === w.programId); return `<tr class="clk" data-act="wDetail" data-id="${w.id}" style="cursor:pointer"><td class="tnum">${fdate(w.date).slice(0, 5)}</td><td class="mu tnum">${w.time || '—'}</td><td><span class="pill ${w.type === 'futevolei' ? 'bl' : w.type === 'cardio' ? 'am' : ''}">${KIND_L[w.type] || w.type}</span></td><td><b class="fw6">${esc(wLabel(w))}</b>${w.note ? `<div class="xs mu ellip" style="max-width:260px">${esc(w.note)}</div>` : ''}${typeof linkBadge === 'function' ? linkBadge(w) : ''}</td><td class="mu">${p ? esc(p.name) : '—'}</td><td class="r tnum">${w.dur || w.min ? (w.dur || w.min) + ' min' : '—'}</td><td class="r">${ic('right', 's')}</td></tr>`; }).join('')}</tbody></table></div>` : `<div class="mt12">${emptyBox('dumbbell', 'Nenhuma atividade encontrada', 'Registre treinos ou ajuste os filtros.', 'Novo treino', 'add', 'data-v="workout"')}</div>`}</section>`;
+  ${ws.length ? `<div class="tbl-w mt12"><table class="tbl"><thead><tr><th>Data</th><th>Horário</th><th>Tipo</th><th>Treino</th><th>Programa</th><th class="r">Duração</th><th></th></tr></thead><tbody>${ws.map(w => { const p = d.programs.find(x => x.id === w.programId); return `<tr class="clk" data-act="wDetail" data-id="${w.id}" style="cursor:pointer"><td class="tnum">${fdate(w.date).slice(0, 5)}</td><td class="mu tnum">${w.time || '—'}</td><td><span class="pill ${w.type === 'futevolei' ? 'bl' : w.type === 'cardio' ? 'am' : ''}">${KIND_L[w.type] || w.type}</span></td><td><b class="fw6">${emo(W_EMO(w))} ${esc(wLabel(w))}</b>${w.note ? `<div class="xs mu ellip" style="max-width:260px">${esc(w.note)}</div>` : ''}${typeof linkBadge === 'function' ? linkBadge(w) : ''}</td><td class="mu">${p ? esc(p.name) : '—'}</td><td class="r tnum">${w.dur || w.min ? (w.dur || w.min) + ' min' : '—'}</td><td class="r">${ic('right', 's')}</td></tr>`; }).join('')}</tbody></table></div>` : `<div class="mt12">${emptyBox('dumbbell', 'Nenhuma atividade encontrada', 'Registre treinos ou ajuste os filtros.', 'Novo treino', 'add', 'data-v="workout"')}</div>`}</section>`;
 }
 function vCalendarioFit() {
   const d = D(), T = todayISO(), ym = S.fitYm || curYM(), first = ym + '-01', start = dateAdd(first, -parseD(first).getDay()), by = fitDates(d), hl = monthHighlights(ym, d), wc = weekdayCounts(d);
@@ -2745,7 +2804,7 @@ function vCalendarioFit() {
   let cells = WD3.map(w => `<div class="wd">${w}</div>`).join('');
   for (let i = 0; i < total; i++) {
     const dt = dateAdd(start, i), ws = by[dt] || [], out = dt.slice(0, 7) !== ym;
-    cells += `<button class="dc ${out ? 'out' : ''} ${dt === T ? 'td' : ''} ${ws.length && !out ? 'tr' : ''}" data-act="${ws.length ? 'wDetail' : 'calFitNew'}" data-id="${ws[0] ? ws[0].id : ''}" data-v="${dt}" aria-label="${fdate(dt)}${ws.length ? ': ' + ws.map(wLabel).join(', ') : ''}"><b>${+dt.slice(8)}</b>${ws.slice(0, 2).map(w => `<span class="ec" style="background:${w.type === 'futevolei' ? 'var(--bl)' : w.type === 'cardio' ? 'var(--am)' : 'var(--g-fitness)'}">${esc(wLabel(w))}</span>`).join('')}${ws.length > 2 ? `<span class="more">+${ws.length - 2}</span>` : ''}</button>`;
+    cells += `<button class="dc ${out ? 'out' : ''} ${dt === T ? 'td' : ''} ${ws.length && !out ? 'tr' : ''}" data-act="${ws.length ? 'wDetail' : 'calFitNew'}" data-id="${ws[0] ? ws[0].id : ''}" data-v="${dt}" aria-label="${fdate(dt)}${ws.length ? ': ' + ws.map(wLabel).join(', ') : ''}"><b>${+dt.slice(8)}</b>${ws.slice(0, 2).map(w => `<span class="ece">${emo(W_EMO(w))}<span class="ec" style="background:${w.type === 'futevolei' ? 'var(--bl)' : w.type === 'cardio' ? 'var(--am)' : 'var(--g-fitness)'}">${esc(wLabel(w))}</span></span>`).join('')}${ws.length > 2 ? `<span class="more">+${ws.length - 2}</span>` : ''}</button>`;
   }
   const goal = +d.settings.weekGoal || 0;
   return `<div class="grid"><section class="card s8"><div class="rowf wrap between mb8"><div class="rowf"><button class="ib bord" data-act="fitYm" data-v="-1" aria-label="Mês anterior">${ic('left', 's')}</button><span class="ttl" style="min-width:150px;text-align:center">${MONTHS[+ym.slice(5) - 1]} ${ym.slice(0, 4)}</span><button class="ib bord" data-act="fitYm" data-v="1" aria-label="Próximo mês">${ic('right', 's')}</button></div><span class="pill gr">${ic('flame', 's')} Você treinou ${last4Weeks(d)} dias nas últimas 4 semanas</span></div><div class="cal mt12">${cells}</div>
@@ -2764,7 +2823,7 @@ function exModal(key) {
   const h = st.h, f = h.filter(x => x.kg > 0), r = h.filter(x => x.bestReps > 0), v = h.filter(x => x.vol > 0);
   const progs = D().programs, k = (l, n, u = '') => `<div class="kpi"><div class="l">${l}</div><div class="n">${n}<small>${u}</small></div></div>`;
   const chart = (title, pts, color, fmt, hh) => pts.length > 1 ? `<div class="mk">${title}</div><div class="mt8">${lineChart(pts.map(x => ({ l: exLbl(h, x), v: x.v })), { h: hh, color, fmt })}</div>` : '';
-  openHTML(`<div class="dh"><div><h3>${esc(name)}</h3><p>${esc(grpOfKey(key) || 'Histórico geral do exercício, em todos os programas')} · ordenado pela data real de cada treino</p></div><button class="ib" data-close aria-label="Fechar">${ic('x')}</button></div><div class="db">
+  openHTML(`<div class="dh"><div><h3>${exFichaEmo(key)}${esc(name)}</h3><p>${esc(grpOfKey(key) || 'Histórico geral do exercício, em todos os programas')} · ordenado pela data real de cada treino</p></div><button class="ib" data-close aria-label="Fechar">${ic('x')}</button></div><div class="db">
   <div class="kpis">${k('Carga inicial', st.first ? N(st.first.kg, 1) : '—', ' kg')}${k('Última carga', st.lastLoad ? N(st.lastLoad.kg, 1) : '—', ' kg')}${k('Maior carga', st.max ? N(st.max, 1) : '—', ' kg')}${k('Menor carga', st.min ? N(st.min, 1) : '—', ' kg')}${k('Evolução de carga', st.first ? (st.total > 0 ? '+' : '') + N(st.total, 1) : '—', ' kg')}${k('Últimas repetições', st.lastReps || '—')}${k('Melhor nº de reps', st.bestReps || '—')}${k('Sessões', st.sessions)}${k('Volume total', N(st.vol, 0), ' kg')}</div>
   ${chart('Carga (kg)', f.map(x => ({ ...x, v: x.kg })), 'var(--g-fitness)', q => N(q, 1), 150)}${chart('Repetições (melhor série)', r.map(x => ({ ...x, v: x.bestReps })), 'var(--bl)', q => N(q, 0), 130)}${chart('Volume por treino (kg)', v.map(x => ({ ...x, v: x.vol })), 'var(--am)', q => N(q, 0), 130)}
   <div class="mk">Histórico cronológico</div><div class="tbl-w mt8"><table class="tbl"><thead><tr><th>Data</th><th>Programa</th><th>Séries</th><th class="r">Carga</th><th class="r">Volume</th><th>Evolução</th></tr></thead><tbody>${h.map((x, i) => { const prev = h[i - 1]; const p = progs.find(q => q.id === x.pid); return `<tr><td class="tnum">${fdate(x.date)}</td><td class="mu xs">${p ? esc(p.name) : '—'}</td><td class="xs">${setsTxt(x.setsArr) || '—'}</td><td class="r tnum">${x.kg ? N(x.kg, 1) + ' kg' : '—'}</td><td class="r tnum">${x.vol ? N(x.vol, 0) : '—'}</td><td>${cmpPill(cmpEntry(x, prev)) || '<span class="mu xs">primeiro registro</span>'}${x.tag ? ` <span class="pill">${esc(x.tag)}</span>` : ''}${prev && x.kg && prev.kg && x.kg !== prev.kg ? `<div class="xs mu">${x.kg > prev.kg ? '+' : ''}${N(x.kg - prev.kg, 1)} kg</div>` : ''}</td></tr>`; }).reverse().join('')}</tbody></table></div></div><div class="df"><button class="btn pri" data-close>Fechar</button></div>`, true);
@@ -3684,12 +3743,6 @@ Object.assign(ACT, {
 });
 
 /* mesmo dia/rotina na aba Resumo quando não há "rotina antiga" cadastrada */
-function progRotinaCard() {
-  const d = D(), p = activeProg(d) || sortedProgs(d)[0]; if (!p) return '';
-  const days = WD_ORDER.map(wd => p.days.find(x => x.wd === wd)).filter(Boolean);
-  return `<section class="card s6"><div class="rowf between mb8"><span class="ttl">Rotina semanal <small>${esc(p.name)}</small></span><button class="btn sm" data-act="fitTab" data-v="programa">Abrir programa</button></div>
-  <div class="list">${days.map(x => `<div class="li clk" data-act="dayOpen" data-id="${x.id}"><div class="ico t"><b class="xs">${WD3[x.wd].toUpperCase()}</b></div><div class="n"><b class="fw6">${esc(x.name)}</b><small>${KIND_L[x.kind]}${x.kind === 'musculacao' ? ' · ' + x.ex.length + ' exercício' + (x.ex.length === 1 ? '' : 's') : ''}</small></div>${ic('right', 's')}</div>`).join('')}</div></section>`;
-}
 
 /* DEMO: programas, sessões detalhadas e progressão fictícios (somente no modo demonstração) */
 function demoFitness(d) {
@@ -5516,10 +5569,6 @@ function dayState(dt, d = D()) {
   if (dt === T && prev) return { k: 'pend', l: 'Pendente', ws, ac, prev, pd };
   return { k: 'none', l: 'Sem registro', ws, ac, prev, pd };
 }
-function fitWeekHTML(d = D()) {
-  const f = fitStats(d), sel = S.fitDay || todayISO();
-  return f.weekDays.map(x => { const st = dayState(x.dt, d), n = st.ws.length; return `<button class="wd-b st-${st.k} ${x.td ? 'td' : ''} ${sel === x.dt ? 'sel' : ''}" data-act="fitDay" data-v="${x.dt}" aria-pressed="${sel === x.dt}" aria-label="${WDL[x.wd]}, ${fdate(x.dt)}: ${st.l}${n > 1 ? ', ' + n + ' sessões' : ''}"><div class="d">${st.k === 'ok' ? (n > 1 ? `<b>${n}</b>` : ic('check')) : st.k === 'rest' ? '–' : st.k === 'pend' ? '!' : ''}</div><small>${WD3[x.wd]}</small></button>`; }).join('');
-}
 const FONTE_W = w => w.source === 'app' ? 'App Treino' : w.source === 'apple' ? 'Apple Saúde' : 'Registro manual';
 function fitDayPanel(d = D()) {
   const dt = S.fitDay || todayISO(), st = dayState(dt, d);
@@ -5536,23 +5585,6 @@ function fitDayPanel(d = D()) {
    ${st.prev && !st.ws.length ? `<div class="sm mt8">Previsto: <b>${esc(st.prev)}</b>${st.pd && st.pd.ex && st.pd.ex.length ? ` · ${st.pd.ex.length} exercícios na ficha` : ''}</div>` : ''}
    ${sess || ci ? sess + ci : `<div class="sm mu mt8">${st.k === 'rest' ? 'Dia de descanso no programa.' : st.k === 'fut' ? 'Dia futuro.' : 'Nenhuma sessão registrada nesta data. Ausência de registro não significa treino não realizado.'}</div>`}</div>`;
 }
-function cFitHero() {
-  const d = D(), f = fitStats(d), T = f.T, ym = T.slice(0, 7), st = dayState(T, d), pg = activeProg(d), pd = st.pd && st.pd.kind !== 'descanso' ? st.pd : null;
-  const ciDays = new Set((d.activity || []).filter(a => (a.date || '').slice(0, 7) === ym).map(a => a.date)).size, wkDays = new Set(f.month.map(w => w.date)).size;
-  const s4 = dateAdd(T, -27), freq = new Set(d.workouts.filter(w => w.date >= s4 && w.date <= T).map(w => w.date)).size / 4;
-  const fut = f.month.filter(w => w.type === 'futevolei').length, wp = f.goal ? pct(f.week.length, f.goal) : 0;
-  const exs = pd && pd.ex ? pd.ex.slice(0, 4) : [], grp = [...new Set((st.ws.length ? st.ws.flatMap(w => (w.ex || []).map(e => e.grp || muscleFor(e.name))) : pd ? (pd.ex || []).map(e => e.grp || muscleFor(e.name)) : []).filter(Boolean))].slice(0, 3);
-  const stc = { ok: 'ok', pend: 'am', rest: 'mu', fut: 'mu', none: '' }[st.k];
-  const stt = (e, v, l) => `<div><span class="emo" aria-hidden="true">${e}</span><b class="tnum">${v}</b><small>${l}</small></div>`;
-  return `<section class="card fhero"><div class="fh-main"><div class="fh-e" aria-hidden="true">${obj3d('dumbbell', 92)}</div><div class="grow" style="min-width:200px">
-    <div class="rowf wrap" style="gap:8px"><span class="lbl">Treino de hoje · ${hojeTxt(T)}</span><span class="chip ${stc}">${st.l}${st.ws.length > 1 ? ' · ' + st.ws.length + ' sessões' : ''}</span></div>
-    <div class="fh-t">${st.ws.length ? esc(st.ws.map(wLabel).join(' + ')) : pd ? esc(pd.name) : st.k === 'rest' ? 'Descanso' : 'Nenhum treino previsto'}</div>
-    <div class="fh-s">${pg ? esc(pg.name) : 'Sem programa ativo'}${grp.length ? ' · ' + esc(grp.join(', ')) : ''}</div>
-    ${exs.length && !st.ws.length ? `<div class="fh-ex">${exs.map(e => `<span>${esc(e.name)} <small>${e.sets || '—'}×${e.reps || '—'}${e.kg ? ' · ' + N(e.kg, 1) + ' kg ref.' : ''}</small></span>`).join('')}</div>` : ''}
-    <div class="rowf wrap mt12" style="gap:8px"><button class="btn pri" data-act="add" data-v="workout">${ic('plus', 's')} Registrar treino</button><button class="btn sm" data-act="fitTab" data-v="historico">Histórico ${ic('right', 's')}</button></div></div>
-   <div class="fh-ring">${ring(wp, PAL.teal, 108, 'Sessões nesta semana')}<div class="fh-rv"><b class="tnum">${f.week.length}</b><small>${f.goal ? 'de ' + f.goal : 'sessões'}</small></div><div class="xs mu">nesta semana</div></div></div>
-   <div class="fh-stats">${stt('💪', f.month.length, 'sessões no mês')}${stt('🗓️', wkDays, 'dias de treino no mês')}${stt('📍', ciDays, 'dias com check-in no mês')}${stt('🔁', N(freq, 1), 'dias de treino por semana (4 sem.)')}${stt('🔥', f.streak, 'dias seguidos com atividade')}${stt('🏐', fut, 'futevôlei no mês')}${stt('⏱️', f.cardioMin + '<small> min</small>', 'tempo de cardio no mês')}</div></section>`;
-}
 const wDeltaCls = (delta, g, ref) => !g || !delta || g.target == null ? 'mu' : ((+g.target < (g.start != null ? +g.start : ref)) === (delta < 0) ? 'pos' : 'neg');
 Object.assign(ACT, {
   fitDay: el => { S.fitDay = el.dataset.v; if (S.page !== 'fit') { S.fitTab = 'resumo'; go('fit'); } else render(); },
@@ -5562,6 +5594,204 @@ Object.assign(ACT, {
 /* =====================================================================
    BOOT
    ===================================================================== */
+/* =====================================================================
+   FITNESS 4 — emoji por ficha, demonstrações (GIF) e treino guiado
+   Reutiliza a sessão existente (status 'andamento', setsLog, setDone, sessField).
+   Nada aqui grava dados novos: conferência das variações fica em vg.ui.v1 (UI.demoOk).
+   ===================================================================== */
+const FICHA_EMO = { 'posterior e gluteo': '🍑', 'costas e biceps': '💪', 'quadriceps': '🦵', 'ombro e triceps': '🏋️‍♀️' };
+/** emoji da ficha (dia do programa ou treino): mesmo emoji em todos os lugares */
+function fichaEmo(x, d = D()) {
+  if (!x) return '';
+  let nm = exKey(x.name || '');
+  if (x.dayId && x.programId) { const p = d.programs.find(q => q.id === x.programId), day = p && p.days.find(q => q.id === x.dayId); if (day && FICHA_EMO[exKey(day.name)]) return FICHA_EMO[exKey(day.name)]; }
+  if (FICHA_EMO[nm]) return FICHA_EMO[nm];
+  if (String(x.id || '').startsWith('act-')) return '📍'; // check-in (conta o dia; não é sessão)
+  const t = x.type || x.kind || '', lbl = (x.type ? (x.kind || '') : '') + ' ' + (x.name || '');
+  if (t === 'futevolei' || nm === 'futevolei') return '🏐';
+  if (t === 'cardio') return /camin/i.test(lbl) ? '🚶‍♀️' : /bike|bicic|cicl|pedal/i.test(lbl) ? '🚴‍♀️' : '🏃‍♀️';
+  if (t === 'descanso') return '🌙';
+  if (t === 'musculacao') return '🏋️‍♀️';
+  return '🤸‍♀️';
+}
+
+/* ---- demonstrações: vínculo pelo id estável do exercício do programa ---- */
+/* st: c = correspondente (vinculado) · v = variação (só após sua conferência) · n = não localizado */
+const DEMO_MAP = {"mwttra8yz2yubz":{"st":"v","cat":"Elevação Pélvica Na Máquina","obs":"A amplitude curta não está explícita no catálogo.","f":"mwttra8yz2yubz"},"mwttrd8tt007pf":{"st":"v","cat":"Hiperextensão","obs":"Confirmar banco e técnica com foco em glúteos.","f":"mwttrd8tt007pf"},"mwttrrmoqtsi2x":{"st":"v","cat":"Abdução de Quadril em Decúbito Lateral","obs":"O nome do catálogo não confirma o uso de caneleira.","f":"mwttrrmoqtsi2x"},"mwttrx9b7n3n0w":{"st":"c","cat":"Máquina de Abdução de Quadril","f":"mwttrx9b7n3n0w"},"mwtts2v9p9vydf":{"st":"c","cat":"Cadeira flexora","f":"mwtts2v9p9vydf"},"mwttsarvpnjqi8":{"st":"c","cat":"Elevação de Panturrilha Sentado com Alavanca","f":"mwttsarvpnjqi8"},"mwttsika6vpyou":{"st":"n"},"mwttsm7ifqfisc":{"st":"n"},"pe-rafaela-cb-1":{"st":"c","cat":"Serrote","f":"pe-rafaela-cb-1"},"pe-rafaela-cb-2":{"st":"v","cat":"Puxada Alta","obs":"Confirmar pegada e execução frontal.","f":"pe-rafaela-cb-2"},"pe-rafaela-cb-3":{"st":"v","cat":"Puxada Alta com Triângulo","obs":"Pressupõe puxada vertical. Se a ficha indicar remada baixa, este GIF não corresponde.","f":"pe-rafaela-cb-3"},"pe-rafaela-cb-4":{"st":"c","cat":"Voador invertido","f":"pe-rafaela-cb-4"},"pe-rafaela-cb-5":{"st":"c","cat":"Rosca martelo","f":"pe-rafaela-cb-5"},"pe-rafaela-cb-6":{"st":"c","cat":"Rosca direta com barra w","f":"pe-rafaela-cb-6"},"mwttt1reruwo7y":{"st":"c","cat":"Agachamento no Smith","f":"mwttt1reruwo7y"},"mwttt86t72tbfu":{"st":"c","cat":"Leg Press Horizontal","f":"mwttt86t72tbfu"},"mwtttdd9ox6iwb":{"st":"v","cat":"Agachamento Búlgaro com Halteres","obs":"A ficha não especifica o equipamento. Confirmar halteres.","f":"mwtttdd9ox6iwb"},"mwtttknj10jm7m":{"st":"c","cat":"Cadeira extensora","f":"mwtttknj10jm7m"},"mwtttoc99gzehk":{"st":"c","cat":"Máquina de Adução de Quadril","f":"mwtttoc99gzehk"},"mwtttsn7o2d7mo":{"st":"v","cat":"Elevação de Panturrilha na Máquina","obs":"A ficha não especifica o modelo do aparelho.","f":"mwtttsn7o2d7mo"},"mwtttx5xsvsna5":{"st":"n"},"pe-rafaela-ot-1":{"st":"v","cat":"Supino Inclinado na Alavanca","obs":"Confirmar o modelo da máquina articulada.","f":"pe-rafaela-ot-1"},"pe-rafaela-ot-2":{"st":"c","cat":"Supino Reto na Máquina","f":"pe-rafaela-ot-2"},"pe-rafaela-ot-3":{"st":"v","cat":"Voador no pec deck","obs":"Confirmar equipamento e posição dos braços.","f":"pe-rafaela-ot-3"},"pe-rafaela-ot-4":{"st":"c","cat":"Elevação lateral de braços com halteres","f":"pe-rafaela-ot-4"},"pe-rafaela-ot-5":{"st":"v","cat":"Levantamento frontal de cabo com dois braços","obs":"O catálogo mostra dois braços. Confirmar altura da polia e execução.","f":"pe-rafaela-ot-5"},"pe-rafaela-ot-6":{"st":"c","cat":"Tríceps Coice com Cabo","f":"pe-rafaela-ot-6"},"pe-rafaela-ot-7":{"st":"c","cat":"Tríceps pulley corda","f":"pe-rafaela-ot-7"}};
+/** Prévia: arquivos servidos só deste Mac. Produção: vazio até a forma de importação ser aprovada (nada é publicado no GitHub). */
+const DEMO_BASE = window.__PREVIA ? '/demos/' : '';
+function demoOf(exId) {
+  const m = exId && DEMO_MAP[exId]; if (!m) return { st: 'n', id: exId };
+  const ok = (UI.demoOk || {})[exId], avail = !!(DEMO_BASE && m.f);
+  const linked = avail && (m.st === 'c' || (m.st === 'v' && ok === 'ok'));
+  const b = avail ? DEMO_BASE : '';
+  return { ...m, id: exId, ok, linked, pend: avail && m.st === 'v' && !ok, rej: m.st === 'v' && ok === 'no', noFiles: !avail && !!m.f,
+    thumb: b && b + 'thumb/' + exId + '.jpg', poster: b && b + 'thumb/' + exId + '-720.jpg', gif: b && b + 'gif/' + exId + '.gif' };
+}
+/** exercício do programa (e o dia) a partir do id */
+function progExById(id, d = D()) {
+  for (const p of d.programs) for (const day of p.days || []) { const e = (day.ex || []).find(x => x.id === id); if (e) return { p, day, e }; }
+  return null;
+}
+/** exercício da sessão → exercício do programa (pelo dia vinculado; o nome nunca é alterado) */
+function progExFor(w, e, d = D()) {
+  const p = d.programs.find(x => x.id === w.programId), day = p && p.days.find(x => x.id === w.dayId), k = e.key || exKey(e.name);
+  return day ? (day.ex || []).find(x => exKey(x.name) === k) || null : null;
+}
+const repsTxt = r => r == null || r === '' ? '— reps' : /[^\d.,]/.test(String(r)) ? esc(String(r)) : r + ' reps';
+function demoThumb(exId, cls = '') {
+  const m = demoOf(exId);
+  if (m.linked) return `<button class="f4th ${cls}" data-act="demoOpen" data-id="${exId}" aria-label="Ver demonstração animada"><img src="${m.thumb}" alt="" loading="lazy" decoding="async"><span class="f4th-p">${ic('play')}</span></button>`;
+  if (m.pend) return `<button class="f4th f4ph f4pend ${cls}" data-act="demoCheck" data-id="${exId}" aria-label="Conferir demonstração sugerida">${ic('eye')}<span class="f4ph-t">Conferir</span></button>`;
+  return `<div class="f4th f4ph ${cls}" title="${m.noFiles ? 'Demonstração ainda não importada neste aparelho' : 'Sem demonstração disponível'}">${ic('dumbbell')}<span class="f4ph-t">${m.noFiles ? 'Não importada' : 'Sem demo'}</span></div>`;
+}
+const demoMini = exId => { const m = demoOf(exId); return m.linked ? `<img class="dmini" src="${m.thumb}" alt="" loading="lazy" decoding="async">` : `<span class="dmini f4ph">${ic('dumbbell')}</span>`; };
+
+/* ---- GIF só quando visível: um por vez, pausa (volta ao quadro estático) fora da tela ---- */
+/* movimento reduzido: na tela do treino fica o quadro estático; a animação abre ao ampliar */
+const DEMO_RM = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+const demoSwap = (im, on) => { const want = on && !DEMO_RM ? im.dataset.gif : im.dataset.poster; if (want && im.getAttribute('src') !== want) im.setAttribute('src', want); };
+const demoIO = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(x => demoSwap(x.target, x.isIntersecting && !document.hidden && !($('#dlg') && $('#dlg').open && !x.target.closest('#dlg')))), { threshold: .25 }) : null;
+function demoScan() {
+  document.querySelectorAll('img[data-gif]').forEach(im => { if (im.dataset.io) return; im.dataset.io = '1'; if (demoIO) demoIO.observe(im); else demoSwap(im, true); });
+}
+function demoRefresh() { document.querySelectorAll('img[data-gif]').forEach(im => { if (demoIO) { demoIO.unobserve(im); demoIO.observe(im); } }); }
+document.addEventListener('visibilitychange', () => document.querySelectorAll('img[data-gif]').forEach(im => document.hidden ? demoSwap(im, false) : demoRefresh()));
+let _demoMO = 0; new MutationObserver(() => { if (_demoMO) return; _demoMO = requestAnimationFrame(() => { _demoMO = 0; demoScan(); }); }).observe(document.body, { childList: true, subtree: true });
+
+const DEMO_CREDIT = 'Fonte: GIF do Treino (gifdotreino.com). Uso pessoal; todos os direitos pertencem ao titular.';
+function demoModal(id, check) {
+  const r = progExById(id), m = demoOf(id); if (!r || !(m.linked || check)) return;
+  const E = fichaEmo(r.day), src = m.gif;
+  document.querySelectorAll('#app img[data-gif]').forEach(im => demoSwap(im, false));
+  const dl = openHTML(`<div class="dh"><div><h3>${emo(E)} ${esc(r.e.name)}</h3><p>${esc(r.day.name)}${r.e.grp && exKey(r.e.grp) !== exKey(r.day.name) ? ' · ' + esc(r.e.grp) : ''}</p></div><button class="ib" data-close aria-label="Fechar">${ic('x')}</button></div>
+  <div class="db"><div class="demo-big"><img src="${src}" alt="Demonstração animada: ${esc(r.e.name)}" decoding="async"></div>
+   ${check ? `<div class="sess mt12" style="border-color:var(--ambar)"><span class="chip am">Variação — confira antes de vincular</span><div class="sm mt8">Sugestão do catálogo: <b>${esc(m.cat)}</b></div>${m.obs ? `<div class="sm mt4">${esc(m.obs)}</div>` : ''}<div class="xs mu mt8">O nome e os dados do exercício na sua ficha não mudam. Se você não vincular, o exercício fica sem demonstração.</div></div>`
+      : `<div class="rowf wrap mt12" style="gap:6px"><span class="chip ok">${m.st === 'c' ? 'Demonstração correspondente' : 'Variação conferida por você'}</span><span class="chip mu">Catálogo: ${esc(m.cat)}</span></div>`}
+   ${r.e.note ? `<div class="sm mt12"><b>Observação da ficha:</b> ${esc(r.e.note)}</div>` : ''}
+   <div class="xs mu mt12">${DEMO_CREDIT}</div></div>
+  <div class="df">${check ? `<button class="btn" data-act="demoSet" data-id="${id}" data-v="no">Não corresponde</button><button class="btn pri" data-act="demoSet" data-id="${id}" data-v="ok">${ic('check', 's')} Corresponde — vincular</button>` : `${m.st === 'v' ? `<button class="btn gh l" data-act="demoSet" data-id="${id}" data-v="">Desfazer conferência</button>` : ''}<button class="btn pri" data-close>Fechar</button>`}</div>`, true);
+  dl.addEventListener('close', () => setTimeout(demoRefresh, 30), { once: true });
+}
+
+/* ---- ficha: lista compacta na ordem original ---- */
+function fichaExRow(p, day, e, i, tw) {
+  const st = exStats(exKey(e.name)), last = st.lastLoad;
+  const se = tw && (tw.ex || []).find(x => exKey(x.name) === exKey(e.name));
+  const done = se ? !!(se.done || ((se.setsLog || []).length && se.setsLog.every(s => s.done))) : null;
+  const ind = se ? `<span class="cdot ${done ? 'ok' : 'f4pend'}" role="img" aria-label="${done ? 'Concluído hoje' : 'Pendente hoje'}" title="${done ? 'Concluído hoje' : 'Pendente hoje'}">${done ? ic('check') : ''}</span>` : '';
+  return `<div class="f4r"><span class="ord">${i + 1}</span>${demoThumb(e.id)}
+   <div class="exi"><button class="lnk exn" data-act="exModal" data-key="${esc(exKey(e.name))}">${esc(e.name)}</button>${e.grp ? `<div class="xs mu">${esc(e.grp)}</div>` : ''}
+    <div class="meta"><span><b>${e.sets || '—'} séries × ${repsTxt(e.reps)}</b></span><span>Ref.: ${e.kg ? '<b>' + N(e.kg, 1) + ' kg</b>' : 'não cadastrada'}</span><span>Última registrada: ${last ? '<b>' + N(last.kg, 1) + ' kg</b> · ' + fdate(last.date).slice(0, 5) : 'sem registro'}</span>${e.rest ? `<span>Descanso: <b>${esc(String(e.rest))}</b></span>` : ''}</div>
+    ${e.note ? `<div class="f4nt">${esc(e.note)}</div>` : ''}</div>
+   <div class="exs">${ind}<button class="ib" data-act="exPlanEdit" data-pid="${p.id}" data-did="${day.id}" data-id="${e.id}" aria-label="Editar">${ic('pencil', 's')}</button><button class="ib" data-act="exPlanDel" data-pid="${p.id}" data-did="${day.id}" data-id="${e.id}" aria-label="Remover">${ic('trash', 's')}</button></div></div>`;
+}
+function vDia(p, day) {
+  const d = D(), cur = inProgress(d), same = cur && cur.dayId === day.id && cur.date === todayISO(), E = fichaEmo(day);
+  const tw = d.workouts.filter(w => w.dayId === day.id && w.date === todayISO()).sort((a, b) => (b.status === 'andamento') - (a.status === 'andamento'))[0];
+  const nSets = sum(day.ex.map(e => +e.sets || 0)), nDemo = day.ex.filter(e => demoOf(e.id).linked).length, nPend = day.ex.filter(e => demoOf(e.id).pend).length;
+  return `<section class="card"><div class="rowf wrap between"><div class="rowf"><button class="ib bord" data-act="closeDay" aria-label="Voltar">${ic('left', 's')}</button><div><div class="md2">${emo(E)} ${WDL[day.wd]} · ${esc(day.name)}</div><div class="lbl">${esc(p.name)}${p.pro ? ' · ' + esc(p.pro) : ''} · ${fdate(p.start)} a ${fdate(p.end)}</div></div></div>
+   <div class="rowf wrap">${day.kind === 'descanso' ? '' : `<button class="btn pri sm" data-act="startSess" data-pid="${p.id}" data-did="${day.id}">${ic('play', 's')} ${same ? 'Retomar treino' : 'Iniciar treino'}</button>`}<button class="btn sm" data-act="dayEdit" data-pid="${p.id}" data-id="${day.id}">${ic('pencil', 's')} Editar dia</button></div></div>
+  ${day.kind === 'descanso' ? `<div class="mt16">${emptyBox('moon', 'Dia de descanso', 'Nenhum treino previsto neste dia.')}</div>` : day.kind === 'futevolei' ? `<div class="mt16">${emptyBox('activity', 'Futevôlei', 'Use "Iniciar treino" para registrar data, horário, duração e intensidade.')}</div>` : `
+  <div class="rowf wrap between mt16"><div class="rowf wrap" style="gap:6px"><span class="chip mu">${day.ex.length} exercícios</span><span class="chip mu">${nSets} séries</span><span class="chip ${nDemo ? 'roxo' : 'mu'}">${nDemo} com demonstração</span>${nPend ? `<span class="chip am">${nPend} para conferir</span>` : ''}</div><button class="btn sm" data-act="exPlanEdit" data-pid="${p.id}" data-did="${day.id}">${ic('plus', 's')} Adicionar exercício</button></div>
+  ${day.ex.length ? `<div class="exlist">${day.ex.map((e, i) => fichaExRow(p, day, e, i, tw)).join('')}</div><div class="xs mu mt8">Ref. = carga de referência da ficha. Última registrada = maior carga das séries concluídas no último treino com carga.</div>` : `<div class="mt8">${emptyBox('dumbbell', 'Nenhum exercício neste treino', 'Adicione os exercícios passados pela sua professora. Cargas e repetições ficam vazias até você preencher.', 'Adicionar exercício', 'exPlanEdit', `data-pid="${p.id}" data-did="${day.id}"`)}</div>`}`}</section>`;
+}
+
+/* ---- central de demonstrações (conferência das variações) ---- */
+function cDemos(p) {
+  const days = WD_ORDER.map(wd => p.days.find(x => x.wd === wd)).filter(x => x && (x.ex || []).length);
+  const all = days.flatMap(day => day.ex.map(e => ({ day, e, m: demoOf(e.id) })));
+  if (!all.some(x => DEMO_MAP[x.e.id])) return '';
+  const c = { lk: all.filter(x => x.m.linked).length, pend: all.filter(x => x.m.pend).length, rej: all.filter(x => x.m.rej).length, sem: all.filter(x => !x.m.linked && !x.m.pend && !x.m.rej).length };
+  const vs = all.filter(x => DEMO_MAP[x.e.id] && DEMO_MAP[x.e.id].st === 'v');
+  return `<section class="card s12"><div class="ch"><span class="ttl">Demonstrações dos exercícios</span><span class="xs mu">${DEMO_BASE ? 'arquivos deste Mac (prévia)' : 'não importadas neste aparelho'}</span></div>
+   <div class="kpis mt8"><div class="kpi"><div class="l">Vinculadas</div><div class="n pos">${c.lk}</div></div><div class="kpi"><div class="l">Aguardando conferência</div><div class="n warn">${c.pend}</div></div><div class="kpi"><div class="l">Não correspondem</div><div class="n">${c.rej}</div></div><div class="kpi"><div class="l">Sem demonstração</div><div class="n">${c.sem}</div></div></div>
+   ${vs.length ? `<div class="mk">Variações para conferir</div><div class="list mt8">${vs.map(({ day, e, m }) => `<div class="li"><span class="dmini-w">${DEMO_BASE && m.f ? `<img class="dmini" src="${DEMO_BASE}thumb/${e.id}.jpg" alt="" decoding="async">` : `<span class="dmini f4ph">${ic('dumbbell')}</span>`}</span><div class="n"><b class="fw6">${emo(fichaEmo(day))} ${esc(e.name)}</b><small>Catálogo: ${esc(m.cat)}${m.obs ? ' · ' + esc(m.obs) : ''}</small></div><span class="chip ${m.linked ? 'ok' : m.rej ? 'mu' : 'am'}">${m.linked ? 'Vinculada' : m.rej ? 'Não corresponde' : 'Aguardando'}</span>${DEMO_BASE && m.f ? `<button class="btn sm" data-act="demoCheck" data-id="${e.id}">${m.ok ? 'Rever' : 'Conferir'}</button>` : ''}</div>`).join('')}</div>` : ''}
+   <div class="xs mu mt12">${DEMO_CREDIT} Os arquivos não vão para o GitHub. Exercícios sem arquivo mostram um espaço reservado até existir uma demonstração correta.</div></section>`;
+}
+
+/* ---- treino guiado (mesma sessão, mesmos registros) ---- */
+const fmtClock = ms => { const s = Math.max(0, Math.floor(ms / 1000)), h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60); return (h ? h + ':' + pad(m) : m) + ':' + pad(s % 60); };
+setInterval(() => { const el = document.getElementById('sessClock'); if (!el) return; const w = sessW(); if (w && w.startedAt && w.status === 'andamento') el.textContent = fmtClock(Date.now() - w.startedAt); }, 1000);
+function vSessFoco(w) {
+  const d = D(), n = w.ex.length;
+  let i = S.sessIdx; if (i == null || i < 0 || i >= n) { i = w.ex.findIndex(e => !e.done); if (i < 0) i = n - 1; S.sessIdx = i; }
+  const e = w.ex[i], k = exKey(e.name), pe = progExFor(w, e, d), m = demoOf(pe && pe.id), E = fichaEmo(w), st = exStats(k), pl = e.planned || {}, sets = e.setsLog || [];
+  const p = d.programs.find(x => x.id === w.programId), nd = w.ex.filter(x => x.done).length, nx = w.ex[i + 1], nxe = nx && progExFor(w, nx, d), sd = sets.filter(s => s.done).length;
+  const seg = w.ex.map((x, j) => `<button class="fseg ${x.done ? 'ok' : ''} ${j === i ? 'cur' : ''}" data-act="focoIr" data-i="${j}" aria-label="Exercício ${j + 1}: ${esc(x.name)}${x.done ? ', concluído' : ''}"></button>`).join('');
+  const media = m.linked ? `<div class="fc-media"><img class="demo-anim" src="${m.poster}" data-poster="${m.poster}" data-gif="${m.gif}" alt="Demonstração animada: ${esc(e.name)}" decoding="async"><button class="ib fc-zoom" data-act="demoOpen" data-id="${m.id}" aria-label="Ampliar demonstração">${ic('expand')}</button></div>`
+    : `<div class="fc-media f4ph"><div>${ic('dumbbell')}<div class="sm fw6 mt8">${m.pend ? 'Demonstração aguardando sua conferência' : m.noFiles ? 'Demonstração não importada neste aparelho' : 'Sem demonstração disponível'}</div>${m.pend ? `<button class="btn sm mt8" data-act="demoCheck" data-id="${m.id}">Conferir agora</button>` : `<div class="xs mu mt4">Siga a orientação da sua professora.</div>`}</div></div>`;
+  const ref = (pl.kg ? N(pl.kg, 1) + ' kg' : '—') + (pl.reps ? ' × ' + esc(String(pl.reps)) : '');
+  const rows = sets.map((s, j) => `<div class="fset ${s.done ? 'ok' : ''}"><span class="n">${j + 1}</span><span class="ref tnum">${ref}</span><input class="inp tnum" data-sf="kg" data-i="${i}" data-j="${j}" inputmode="decimal" placeholder="${pl.kg ? N(pl.kg, 1) : st.last ? N(st.last.kg, 1) : 'kg'}" value="${s.kg === '' || s.kg == null ? '' : String(s.kg).replace('.', ',')}" aria-label="Carga realizada série ${j + 1}"><input class="inp tnum" data-sf="reps" data-i="${i}" data-j="${j}" inputmode="numeric" placeholder="${pl.reps || 'reps'}" value="${s.reps === '' || s.reps == null ? '' : s.reps}" aria-label="Repetições série ${j + 1}"><button class="chk ${s.done ? 'on' : ''}" data-act="setDone" data-i="${i}" data-j="${j}" aria-label="Série ${j + 1} concluída" aria-pressed="${!!s.done}">${ic('check')}</button></div>`).join('');
+  const note = (pe && pe.note) || '';
+  return `<section class="card foco">
+   <div class="rowf wrap between" style="gap:10px"><div class="rowf" style="gap:10px"><button class="ib bord" data-act="fitTab" data-v="programa" aria-label="Voltar">${ic('left', 's')}</button><div><div class="fc-w">${emo(E)} ${esc(wLabel(w))}</div><div class="lbl">${p ? esc(p.name) : ''}</div></div></div>
+    <div class="rowf wrap" style="gap:6px">${w.startedAt ? `<span class="chip mu tnum" title="Tempo de treino">${emo('⏱️')} <span id="sessClock">${fmtClock(Date.now() - w.startedAt)}</span></span>` : ''}<button class="btn sm" data-act="sessView" data-v="lista">Ver lista</button><button class="btn sm pri" data-act="finishSess">${ic('check', 's')} Finalizar</button></div></div>
+   <div class="fsegs" role="group" aria-label="Progresso do treino">${seg}</div>
+   <div class="rowf between mt8 xs mu"><span>Exercício <b class="tx">${i + 1}</b> de ${n}</span><span>${nd} de ${n} concluídos</span></div>
+   <div class="fc-grid"><div>${media}${note ? `<div class="fc-note mt12"><b>Observação da ficha</b><div>${esc(note)}</div></div>` : ''}${m.linked ? `<div class="xs mu mt8">${DEMO_CREDIT}</div>` : ''}</div>
+    <div><div class="fc-name">${esc(e.name)}</div><div class="lbl">${esc((pe && pe.grp) || e.grp || '')}</div>
+     <div class="rowf wrap mt8" style="gap:6px"><span class="chip mu">${pl.sets || sets.length} séries × ${repsTxt(pl.reps)}</span><span class="chip mu">Ref.: ${pl.kg ? N(pl.kg, 1) + ' kg' : 'não cadastrada'}</span><span class="chip azul">Última registrada: ${st.lastLoad ? N(st.lastLoad.kg, 1) + ' kg' : '—'}</span>${e.done ? '<span class="chip ok">Exercício concluído</span>' : sd ? `<span class="chip am">${sd} de ${sets.length} séries</span>` : ''}</div>
+     <div class="fsh mt16"><span>Série</span><span>Referência</span><span>Carga (kg)</span><span>Reps</span><span></span></div>${rows}
+     <div class="rowf wrap mt8" style="gap:6px"><button class="btn sm" data-act="addSet" data-i="${i}">${ic('plus', 's')} Série extra</button>${sets.length > 1 ? `<button class="btn sm gh" data-act="rmSet" data-i="${i}">Remover última série</button>` : ''}<button class="lnk xs" data-act="exModal" data-key="${esc(k)}">Ver histórico</button></div>
+     <div class="xs mu mt8">${pe && pe.rest ? 'Descanso: <b>' + esc(String(pe.rest)) + '</b>' : 'Descanso não cadastrado na ficha.'}</div>
+     ${nx ? `<div class="fc-next">${demoMini(nxe && nxe.id)}<div class="grow"><div class="xs mu">Próximo exercício</div><b class="sm">${esc(nx.name)}</b></div></div>` : `<div class="fc-next"><div class="grow"><div class="xs mu">Último exercício da ficha</div><b class="sm">Finalize quando terminar</b></div></div>`}
+     <div class="fc-nav"><button class="btn" data-act="focoIr" data-i="${i - 1}" ${i ? '' : 'disabled'}>${ic('left', 's')} Anterior</button>${nx ? `<button class="btn pri" data-act="focoIr" data-i="${i + 1}">Próximo ${ic('right', 's')}</button>` : `<button class="btn pri" data-act="finishSess">${ic('check', 's')} Finalizar treino</button>`}</div></div></div></section>`;
+}
+function vSessao() {
+  const w = sessW(); if (!w) return '';
+  if (w.status === 'andamento' && S.sessView !== 'lista' && (w.ex || []).length) return vSessFoco(w);
+  return (w.status === 'andamento' && (w.ex || []).length ? `<div class="rowf wrap between card" style="padding:10px 14px"><span class="sm">${emo(fichaEmo(w))} Lista completa do treino</span><button class="btn sm pri" data-act="sessView" data-v="foco">${ic('play', 's')} Voltar ao treino guiado</button></div>` : '') + vSessaoLista();
+}
+
+/* ---- semana interativa e treino de hoje com o emoji da ficha ---- */
+function fitWeekHTML(d = D()) {
+  const f = fitStats(d), sel = S.fitDay || todayISO();
+  return f.weekDays.map(x => { const st = dayState(x.dt, d), n = st.ws.length, E = n ? W_EMO(st.ws[0]) : st.pd && st.pd.kind !== 'descanso' ? fichaEmo(st.pd) : st.prev ? fichaEmo({ name: st.prev }) : '';
+    const inner = st.k === 'rest' ? '–' : E && st.k !== 'none' ? emo(E) + (st.k === 'ok' ? `<span class="f4bdg">${n > 1 ? n : ic('check')}</span>` : '') : st.k === 'ok' ? ic('check') : st.k === 'pend' ? '!' : '';
+    return `<button class="wd-b st-${st.k} ${E && st.k !== 'none' && st.k !== 'rest' ? 'has-e' : ''} ${x.td ? 'td' : ''} ${sel === x.dt ? 'sel' : ''}" data-act="fitDay" data-v="${x.dt}" aria-pressed="${sel === x.dt}" aria-label="${WDL[x.wd]}, ${fdate(x.dt)}: ${st.l}${st.prev ? ' (' + esc(st.prev) + ')' : ''}${n > 1 ? ', ' + n + ' sessões' : ''}"><div class="d">${inner}</div><small>${WD3[x.wd]}</small></button>`; }).join('');
+}
+function progRotinaCard() {
+  const d = D(), p = activeProg(d) || sortedProgs(d)[0]; if (!p) return '';
+  const days = WD_ORDER.map(wd => p.days.find(x => x.wd === wd)).filter(Boolean);
+  return `<section class="card s6"><div class="rowf between mb8"><span class="ttl">Rotina semanal <small>${esc(p.name)}</small></span><button class="btn sm" data-act="fitTab" data-v="programa">Abrir programa</button></div>
+  <div class="list">${days.map(x => `<div class="li clk" data-act="dayOpen" data-id="${x.id}"><div class="ico t"><b class="xs">${WD3[x.wd].toUpperCase()}</b></div><div class="n"><b class="fw6">${emo(fichaEmo(x))} ${esc(x.name)}</b><small>${KIND_L[x.kind]}${x.kind === 'musculacao' ? ' · ' + x.ex.length + ' exercício' + (x.ex.length === 1 ? '' : 's') : ''}</small></div>${ic('right', 's')}</div>`).join('')}</div></section>`;
+}
+function cFitHero() {
+  const d = D(), f = fitStats(d), T = f.T, ym = T.slice(0, 7), st = dayState(T, d), pg = activeProg(d), pd = st.pd && st.pd.kind !== 'descanso' ? st.pd : null, pgd = progForDate(T, d), cur = inProgress(d);
+  const ciDays = new Set((d.activity || []).filter(a => (a.date || '').slice(0, 7) === ym).map(a => a.date)).size, wkDays = new Set(f.month.map(w => w.date)).size;
+  const s4 = dateAdd(T, -27), freq = new Set(d.workouts.filter(w => w.date >= s4 && w.date <= T).map(w => w.date)).size / 4;
+  const fut = f.month.filter(w => w.type === 'futevolei').length, wp = f.goal ? pct(f.week.length, f.goal) : 0;
+  const exs = pd && pd.ex ? pd.ex.slice(0, 4) : [], grp = [...new Set((st.ws.length ? st.ws.flatMap(w => (w.ex || []).map(e => e.grp || muscleFor(e.name))) : pd ? (pd.ex || []).map(e => e.grp || muscleFor(e.name)) : []).filter(Boolean))].slice(0, 3);
+  const stc = { ok: 'ok', pend: 'am', rest: 'mu', fut: 'mu', none: '' }[st.k];
+  const E = st.ws.length ? W_EMO(st.ws[0]) : pd ? fichaEmo(pd) : st.k === 'rest' ? '🌙' : '';
+  const canStart = !cur && pd && pgd && !st.ws.length && pd.kind === 'musculacao';
+  const stt = (e, v, l) => `<div><span class="emo" aria-hidden="true">${e}</span><b class="tnum">${v}</b><small>${l}</small></div>`;
+  return `<section class="card fhero"><div class="fh-main"><div class="fh-e" aria-hidden="true">${obj3d('dumbbell', 92)}</div><div class="grow" style="min-width:200px">
+    <div class="rowf wrap" style="gap:8px"><span class="lbl">Treino de hoje · ${hojeTxt(T)}</span><span class="chip ${cur ? 'roxo' : stc}">${cur ? 'Em andamento' : st.l}${st.ws.length > 1 ? ' · ' + st.ws.length + ' sessões' : ''}</span></div>
+    <div class="fh-t">${E ? emo(E) + ' ' : ''}${cur ? esc(wLabel(cur)) : st.ws.length ? esc(st.ws.map(wLabel).join(' + ')) : pd ? esc(pd.name) : st.k === 'rest' ? 'Descanso' : 'Nenhum treino previsto'}</div>
+    <div class="fh-s">${pg ? esc(pg.name) : 'Sem programa ativo'}${grp.length ? ' · ' + esc(grp.join(', ')) : ''}</div>
+    ${exs.length && !st.ws.length ? `<div class="fh-ex2">${exs.map(e => `<span class="f4x">${demoMini(e.id)}<span><b>${esc(e.name)}</b><small>${e.sets || '—'} × ${repsTxt(e.reps)}${e.kg ? ' · ' + N(e.kg, 1) + ' kg ref.' : ''}</small></span></span>`).join('')}${pd.ex.length > 4 ? `<span class="xs mu">+${pd.ex.length - 4} exercícios na ficha</span>` : ''}</div>` : ''}
+    <div class="rowf wrap mt12" style="gap:8px">${cur ? `<button class="btn pri" data-act="resumeSess" data-id="${cur.id}">${ic('play', 's')} Retomar treino</button>` : canStart ? `<button class="btn pri" data-act="startSess" data-pid="${pgd.id}" data-did="${pd.id}">${ic('play', 's')} Iniciar treino</button><button class="btn sm" data-act="dayOpen" data-id="${pd.id}">Ver ficha</button>` : ''}<button class="btn ${cur || canStart ? 'sm' : 'pri'}" data-act="add" data-v="workout">${ic('plus', 's')} Registrar treino</button><button class="btn sm" data-act="fitTab" data-v="historico">Histórico ${ic('right', 's')}</button></div></div>
+   <div class="fh-ring">${ring(wp, PAL.teal, 108, 'Sessões nesta semana')}<div class="fh-rv"><b class="tnum">${f.week.length}</b><small>${f.goal ? 'de ' + f.goal : 'sessões'}</small></div><div class="xs mu">nesta semana</div></div></div>
+   <div class="fh-stats">${stt('✅', f.month.length, 'sessões no mês')}${stt('🗓️', wkDays, 'dias de treino no mês')}${stt('📍', ciDays, 'dias com check-in no mês')}${stt('🔁', N(freq, 1), 'dias de treino por semana (4 sem.)')}${stt('🔥', f.streak, 'dias seguidos com atividade')}${stt('🏐', fut, 'futevôlei no mês')}${stt('⏱️', f.cardioMin + '<small> min</small>', 'tempo de cardio no mês')}</div></section>`;
+}
+/** emoji da ficha a que um exercício pertence (para o histórico/evolução do exercício) */
+function exFichaEmo(key, d = D()) { const p = activeProg(d) || sortedProgs(d)[0]; const day = p && p.days.find(x => (x.ex || []).some(e => exKey(e.name) === key)); return day ? emo(fichaEmo(day)) + ' ' : ''; }
+
+if (!ICONS.expand) ICONS.expand = '<path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/>';
+const _fit4Start = ACT.startSess, _fit4Resume = ACT.resumeSess, _fit4Reopen = ACT.reopenSess;
+Object.assign(ACT, {
+  startSess: el => { S.sessIdx = null; S.sessView = ''; _fit4Start(el); },
+  resumeSess: el => { S.sessIdx = null; S.sessView = ''; _fit4Resume(el); },
+  reopenSess: el => { S.sessIdx = null; S.sessView = 'lista'; _fit4Reopen(el); },
+  focoIr: el => { const w = sessW(); if (!w) return; S.sessIdx = clamp(+el.dataset.i, 0, w.ex.length - 1); render(); window.scrollTo({ top: 0 }); },
+  sessView: el => { S.sessView = el.dataset.v; render(); },
+  demoOpen: el => demoModal(el.dataset.id, false),
+  demoCheck: el => demoModal(el.dataset.id, true),
+  demoSet: el => { UI.demoOk = UI.demoOk || {}; if (el.dataset.v) UI.demoOk[el.dataset.id] = el.dataset.v; else delete UI.demoOk[el.dataset.id]; saveUI(); const dl = $('#dlg'); dl.open && dl.close(); toast(el.dataset.v === 'ok' ? 'Demonstração vinculada a este exercício.' : el.dataset.v === 'no' ? 'Registrado: esta demonstração não corresponde.' : 'Conferência desfeita.'); render(); },
+});
+
 (function boot() {
   setTheme(UI.theme || 'light');
   S.loading = true; render();
