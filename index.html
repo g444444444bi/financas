@@ -5383,7 +5383,7 @@ const FIN_SEC = [['resumo', '📊', 'Resumo'], ['lanc', '🧾', 'Lançamentos'],
 function vFinSec() {
   const sec = S.finSec || 'resumo', t = document.createElement('div'); t.innerHTML = vFin();
   const grid = t.firstElementChild, G = { resumo: [], lanc: [], fluxo: [], ins: [] };
-  [...grid.children].forEach(el => { const T = ((el.querySelector('.ttl') || {}).textContent || '').trim(); const g = /^Lançamentos de/.test(T) ? 'lanc' : /Últimos 6 meses/.test(T) ? 'fluxo' : /Gastos por categoria/.test(T) ? 'ins' : 'resumo'; G[g].push(el.outerHTML); });
+  [...grid.children].forEach(el => { const T = ((el.querySelector('.ttl') || {}).textContent || '').replace(/^[^A-Za-zÀ-ÿ]+/, '').trim(); const g = /^Lançamentos de/.test(T) ? 'lanc' : /Últimos 6 meses/.test(T) ? 'fluxo' : /Gastos por categoria/.test(T) ? 'ins' : 'resumo'; G[g].push(el.outerHTML); });
   const body = sec === 'resumo' ? G.resumo.join('') + cDisponivel('s4') + cGastos('s8', true) + `<div class="s12 rowf wrap"><button class="btn sm" data-act="g3fin" data-v="lanc">${ic('receipt', 's')} Ver lançamentos do mês</button></div>`
     : sec === 'lanc' ? G.lanc.join('') : sec === 'fluxo' ? cGastos('s12') + cFluxo('s12') + G.fluxo.join('')
       : sec === 'plan' ? cRitmo('s6') + cDistribuicao('s6') + cPlanejado('s12') : cAlertas('s5') + cInsights('s7') + G.ins.join('');
@@ -5501,7 +5501,7 @@ function fitDayPanel(d = D()) {
   const dt = S.fitDay || todayISO(), st = dayState(dt, d);
   const lk = w => (d.links || []).filter(l => l.wid === w.id).map(l => (d.hsamples || []).find(s => s.id === l.sid)).filter(Boolean);
   const exRows = w => (w.ex || []).length ? `<div class="tbl-w mt8"><table class="tbl ex3"><thead><tr><th>Exercício</th><th>Registrado</th><th>Referência</th></tr></thead><tbody>${w.ex.map(e => {
-    const reg = (e.setsLog || []).filter(s => s.done && (s.kg !== '' || s.reps !== '')).map(s => `${s.kg !== '' && s.kg != null ? N(+s.kg, 1) + ' kg' : '—'} × ${s.reps || '—'}`);
+    const reg = exDone(e).map(s => `${s.kg ? N(+s.kg, 1) + ' kg' : '—'} × ${s.reps || '—'}`);
     const pl = e.planned || {}, ref = (pl.sets || pl.reps || pl.kg) ? `${pl.sets || '—'}×${pl.reps || '—'}${pl.kg ? ' · ' + N(pl.kg, 1) + ' kg' : ''}` : '';
     return `<tr><td><b class="fw6">${esc(e.name)}</b>${e.grp ? `<div class="xs mu">${esc(e.grp)}</div>` : ''}${e.note ? `<div class="xs mu">${esc(e.note)}</div>` : ''}</td><td class="tnum">${reg.length ? reg.join('<br>') : '<span class="mu">sem carga registrada</span>'}</td><td class="tnum mu">${ref || '—'}</td></tr>`; }).join('')}</tbody></table></div>` : '';
   const sess = st.ws.map(w => { const p = d.programs.find(x => x.id === w.programId), grp = [...new Set((w.ex || []).map(e => e.grp).filter(Boolean))], l = lk(w);
