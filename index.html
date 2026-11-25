@@ -4904,6 +4904,7 @@ const Cloud = {
     }
     catch (e) { console.warn(e); S.cloud = 'err'; toast('Não foi possível sincronizar. Usando dados deste aparelho.', 'err'); }
     UI.local = false; saveUI(); Gate.hide(); render();
+    try { DemoSync.start(); } catch (e) { }
   },
   async refresh() { // traz mudanças feitas em outro aparelho/aba, com merge
     if (!this.uid || !this.engine || this.busy || Date.now() - this.lastPull < 20000) return;
@@ -5626,6 +5627,7 @@ const DEMO_BASE = window.__PREVIA ? '/demos/' : '';
 function demoOf(exId) {
   const m = exId && DEMO_MAP[exId]; if (!m) return { st: 'n', id: exId };
   const ok = (UI.demoOk || {})[exId], loc = DEMO_URLS[exId], srv = !!(DEMO_BASE && m.f), avail = !!(loc || srv);
+  if (!loc && !srv && m.f) DemoSync.want(exId);
   const linked = avail && (m.st === 'c' || (m.st === 'v' && ok === 'ok'));
   const b = srv ? DEMO_BASE : '';
   return { ...m, id: exId, ok, linked, local: !!loc, pend: avail && m.st === 'v' && !ok, rej: m.st === 'v' && ok === 'no', noFiles: !avail && !!m.f,
@@ -5647,7 +5649,7 @@ function demoThumb(exId, cls = '') {
   const m = demoOf(exId);
   if (m.linked) return `<button class="f4th ${cls}" data-act="demoOpen" data-id="${exId}" aria-label="Ver demonstração animada"><img class="dimg" src="${m.thumb}" alt="" decoding="async"><span class="f4th-p">${ic('play')}</span></button>`;
   if (m.pend) return `<button class="f4th f4ph f4pend ${cls}" data-act="demoCheck" data-id="${exId}" aria-label="Conferir demonstração sugerida">${ic('eye')}<span class="f4ph-t">Conferir</span></button>`;
-  return m.noFiles ? DEMO_PH(cls, 'Não importada', 'Demonstração ainda não importada neste aparelho') : DEMO_PH(cls, 'Sem demo', 'Sem demonstração disponível');
+  return m.noFiles ? DEMO_PH(cls, DemoSync.label(exId), 'Demonstração ainda não disponível neste aparelho') : DEMO_PH(cls, 'Sem demo', 'Sem demonstração disponível');
 }
 const demoMini = exId => { const m = demoOf(exId); return m.linked ? `<img class="dmini dimg" src="${m.thumb}" alt="" decoding="async">` : `<span class="dmini f4ph">${ic('dumbbell')}</span>`; };
 /* imagem que falhar vira espaço reservado "Demonstração indisponível" (nunca imagem quebrada) */
@@ -5730,7 +5732,7 @@ async function demoImport(list) {
   db.close();
   try { if (navigator.storage && navigator.storage.persist) R.persist = await navigator.storage.persist(); } catch (e) { }
   try { if (navigator.storage && navigator.storage.estimate) R.est = await navigator.storage.estimate(); } catch (e) { }
-  await demoLoadLocal(); DEMO_IMP = R; render(); demoResult();
+  await demoLoadLocal(); DEMO_IMP = R; render(); demoResult(); try { DemoSync.push(); } catch (e) { }
 }
 function demoCounts() {
   const p = d => (d.programs.find(x => x.id === 'prog-rafaela') || activeProg(d) || sortedProgs(d)[0]);
@@ -5755,7 +5757,7 @@ function cDemoImport(cls = 's12') {
   return `<section class="card ${cls}"><div class="ch"><span class="ttl">${emo('🎞️')} Demonstrações neste aparelho</span></div>
    <div class="lbl mt8">${DEMO_LOCAL.n ? `${DEMO_LOCAL.n} GIF${DEMO_LOCAL.n > 1 ? 's' : ''} importado${DEMO_LOCAL.n > 1 ? 's' : ''} · ${fmtMB(DEMO_LOCAL.bytes)} · última importação ${new Date(DEMO_LOCAL.at).toLocaleDateString('pt-BR')}` : DEMO_LOCAL.ok ? 'Nenhuma demonstração importada neste aparelho.' : 'Armazenamento local indisponível neste navegador.'}${DEMO_BASE ? ' · prévia: arquivos também servidos por este Mac' : ''}</div>
    <div class="rowf wrap mt12" style="gap:8px"><button class="btn pri" data-act="demoPick">${ic('upload', 's')} Importar demonstrações neste aparelho</button>${'webkitdirectory' in document.createElement('input') && !/iPhone|iPad/.test(navigator.userAgent) ? `<button class="btn sm" data-act="demoPickDir">${ic('upload', 's')} Escolher a pasta</button>` : ''}${DEMO_IMP ? `<button class="btn sm" data-act="demoShowRes">Ver último resultado</button>` : ''}${DEMO_LOCAL.n ? `<button class="btn sm gh dng" data-act="demoClear">Remover cópias deste aparelho</button>` : ''}</div>
-   <div class="xs mu mt8">Selecione os GIFs (vários de uma vez) e, se quiser, o <b>indice.json</b>. O app reconhece cada arquivo pelo nome do índice e confere o conteúdo; variações só são usadas depois da sua conferência. Reimportar não duplica.</div>
+   ${DemoSync.line()}<div class="xs mu mt8">Selecione os GIFs (vários de uma vez) e, se quiser, o <b>indice.json</b>. O app reconhece cada arquivo pelo nome do índice e confere o conteúdo; variações só são usadas depois da sua conferência. Reimportar não duplica.</div>
    <input type="file" id="demoFiles" multiple accept=".gif,image/gif,.json,application/json" hidden><input type="file" id="demoDir" webkitdirectory multiple hidden></section>`;
 }
 document.addEventListener('change', e => { if (e.target && (e.target.id === 'demoFiles' || e.target.id === 'demoDir')) { const fl = e.target.files; demoImport(fl).finally(() => { e.target.value = ''; }); } });
@@ -5913,8 +5915,143 @@ Object.assign(ACT, {
   sessView: el => { S.sessView = el.dataset.v; render(); },
   demoOpen: el => demoModal(el.dataset.id, false),
   demoCheck: el => demoModal(el.dataset.id, true),
-  demoSet: el => { UI.demoOk = UI.demoOk || {}; if (el.dataset.v) UI.demoOk[el.dataset.id] = el.dataset.v; else delete UI.demoOk[el.dataset.id]; saveUI(); const dl = $('#dlg'); dl.open && dl.close(); toast(el.dataset.v === 'ok' ? 'Demonstração vinculada a este exercício.' : el.dataset.v === 'no' ? 'Registrado: esta demonstração não corresponde.' : 'Conferência desfeita.'); render(); },
+  demoSet: el => { UI.demoOk = UI.demoOk || {}; if (el.dataset.v) UI.demoOk[el.dataset.id] = el.dataset.v; else delete UI.demoOk[el.dataset.id]; saveUI(); try { DemoSync.link(el.dataset.id, el.dataset.v || ''); } catch (e) { } const dl = $('#dlg'); dl.open && dl.close(); toast(el.dataset.v === 'ok' ? 'Demonstração vinculada a este exercício.' : el.dataset.v === 'no' ? 'Registrado: esta demonstração não corresponde.' : 'Conferência desfeita.'); render(); },
 });
+
+/* =====================================================================
+   SINCRONIZAÇÃO DAS DEMONSTRAÇÕES (GIF) — Firestore em partes, plano Spark
+   Coleções privadas do próprio UID, separadas do documento principal users/{uid}:
+     users/{uid}/demos/{sha256}            metadados (done=false até a última parte)
+     users/{uid}/demos/{sha256}/parts/{n}  partes binárias (Bytes, 384 KiB)
+     users/{uid}/demoLinks/{exId}          associação aprovada por exercício
+   Não toca em users/{uid}.vg, planned, setsLog nem em vidagabriela-files.
+   ===================================================================== */
+const DemoSync = (() => {
+  const LS = 'vg.demosync.v1', CH = 393216, RD_MAX = 30000, WR_MAX = 12000, CAT_TTL = 30 * 60000, SRC = 'GIF do Treino';
+  const S0 = { s: 'idle', q: [], fail: {}, run: false, up: false, cat: null, links: null, paused: '', err: '', n: 0, started: false, partial: {} };
+  const st = { ...S0 };
+  const lsGet = () => { try { return JSON.parse(localStorage.getItem(LS) || '{}'); } catch (e) { return {}; } };
+  const lsSet = o => { try { localStorage.setItem(LS, JSON.stringify(o)); } catch (e) { } };
+  const today = () => new Date().toISOString().slice(0, 10);
+  const quota = (k, n = 0) => { const o = lsGet(), q = o.q && o.q.d === today() ? o.q : { d: today(), r: 0, w: 0 }; if (n) { q[k] += n; o.q = q; lsSet(o); } return q; };
+  const fs = () => Cloud.m.fs, ok = () => !!(Cloud.uid && Cloud.m && Cloud.db) && navigator.onLine !== false;
+  const col = (...p) => fs().collection(Cloud.db, 'users', Cloud.uid, ...p), dref = (...p) => fs().doc(Cloud.db, 'users', Cloud.uid, ...p);
+  const pid = i => String(i).padStart(4, '0');
+  const paint = (() => { let t = 0; return () => { if (t) return; t = setTimeout(() => { t = 0; try { render(); } catch (e) { } }, 500); }; })();
+  const quotaErr = e => e && (e.code === 'resource-exhausted' || /quota/i.test(String(e.message || '')));
+  const hold = e => { if (quotaErr(e)) { st.paused = 'quota'; } else st.err = String((e && e.code) || (e && e.message) || e); };
+  const canRead = () => !st.paused && quota('r').r < RD_MAX, canWrite = () => !st.paused && quota('w').w < WR_MAX;
+
+  /* catálogo (metadados + vínculos): 1 consulta curta, repetida no máximo a cada 30 min por aparelho */
+  async function catalog(force) {
+    const o = lsGet();
+    if (!force && o.cat && Date.now() - (o.catAt || 0) < CAT_TTL) { st.cat = o.cat; st.links = o.links || {}; return true; }
+    if (!ok() || !canRead()) { st.cat = st.cat || o.cat || null; st.links = st.links || o.links || {}; return !!st.cat; }
+    try {
+      const [a, b] = await Promise.all([fs().getDocs(fs().query(col('demos'), fs().limit(80))), fs().getDocs(fs().query(col('demoLinks'), fs().limit(80)))]);
+      quota('r', a.size + b.size);
+      const cat = {}, links = {}; a.forEach(s => { cat[s.id] = s.data(); }); b.forEach(s => { links[s.id] = s.data(); });
+      st.cat = cat; st.links = links; lsSet({ ...lsGet(), cat, links, catAt: Date.now() }); st.err = '';
+      let ch = false; Object.values(links).forEach(l => { const m = DEMO_MAP[l.ex]; if (m && m.sha === l.sha && (l.ok === 'ok' || l.ok === 'no') && (UI.demoOk || {})[l.ex] === undefined) { UI.demoOk = UI.demoOk || {}; UI.demoOk[l.ex] = l.ok; ch = true; } });
+      if (ch) saveUI();
+      return true;
+    } catch (e) { hold(e); return !!st.cat; }
+  }
+
+  /* recuperação sob demanda: um arquivo por vez, só do que a tela pede e que não está no aparelho */
+  function want(exId) {
+    const m = DEMO_MAP[exId]; if (!m || !m.f || !m.sha || !Cloud.uid || DEMO_URLS[exId] || st.q.includes(exId)) return;
+    const f = st.fail[exId]; if (f && Date.now() < f.t) return;
+    st.q.push(exId); setTimeout(work, 0);
+  }
+  async function download(meta) {
+    let parts = st.partial[meta.sha] || (st.partial[meta.sha] = []);
+    while (parts.length < meta.n) {
+      if (!ok() || !canRead()) throw Object.assign(new Error('offline'), { code: st.paused ? 'resource-exhausted' : 'unavailable' });
+      const s = await fs().getDocs(fs().query(col('demos', meta.sha, 'parts'), fs().where('i', '>=', parts.length), fs().orderBy('i'), fs().limit(6)));
+      quota('r', s.size); if (!s.size) throw new Error('partes ausentes');
+      s.forEach(d => { const x = d.data(); if (x.i === parts.length) parts.push(x.b.toUint8Array()); });
+    }
+    const buf = new Uint8Array(parts.reduce((a, p) => a + p.length, 0)); let o = 0; parts.forEach(p => { buf.set(p, o); o += p.length; });
+    delete st.partial[meta.sha];
+    if (buf.length !== meta.size) throw new Error('tamanho divergente');
+    if (await sha256hex(buf.buffer) !== meta.sha) throw new Error('hash divergente');
+    return buf.buffer;
+  }
+  async function work() {
+    if (st.run) return; st.run = true; st.s = 'down';
+    try {
+      if (!(await catalog(false))) { st.q.splice(0).forEach(x => { st.fail[x] = { t: Date.now() + 60000, off: true }; }); return; }
+      while (st.q.length) {
+        const id = st.q.shift(), m = DEMO_MAP[id]; if (!m || DEMO_URLS[id]) continue;
+        try {
+          const meta = st.cat && st.cat[m.sha];
+          if (!meta || meta.done !== true || meta.sha !== m.sha) { st.fail[id] = { t: Date.now() + 600000, off: false }; continue; }
+          const buf = await download(meta), db = await demoDB();
+          try { await demoPut(db, id, { name: meta.name || m.a }, buf, meta.sha); } finally { db.close(); }
+          await demoLoadLocal(); st.err = ''; paint();
+        } catch (e) { hold(e); st.fail[id] = { t: Date.now() + 60000, off: !ok() }; if (st.paused) break; }
+      }
+    } finally { st.run = false; st.s = 'idle'; paint(); }
+  }
+
+  /* envio único (por hash), retomável: só envia o arquivo conferido com o índice (divergentes nunca sobem sozinhos) */
+  async function sendOne(exId) {
+    const m = DEMO_MAP[exId], loc = DEMO_URLS[exId]; if (!m || !loc || loc.sha !== m.sha) return;
+    const cur = st.cat && st.cat[m.sha]; if (cur && cur.done === true) return;
+    const buf = await (await fetch(loc.gif)).arrayBuffer();
+    if (await sha256hex(buf) !== m.sha) return;
+    const n = Math.ceil(buf.byteLength / CH), snap = await fs().getDoc(dref('demos', m.sha)); quota('r', 1);
+    let meta = snap.exists() ? snap.data() : null;
+    if (meta && meta.done === true) { st.cat = { ...(st.cat || {}), [m.sha]: meta }; return; }
+    if (meta && (meta.n !== n || meta.size !== buf.byteLength)) return; // metadado incompatível: nunca sobrescrever
+    if (!meta) { if (!canWrite()) return; meta = { sha: m.sha, ex: exId, name: loc.file || m.a, size: buf.byteLength, n, ver: 1, src: SRC, st: m.st, at: Date.now(), done: false, up: 0 }; await fs().setDoc(dref('demos', m.sha), meta); quota('w', 1); }
+    const u8 = new Uint8Array(buf);
+    for (let i = meta.up || 0; i < n; i += 4) {
+      if (!ok() || !canWrite()) return;
+      const b = fs().writeBatch(Cloud.db), top = Math.min(n, i + 4);
+      for (let k = i; k < top; k++) b.set(dref('demos', m.sha, 'parts', pid(k)), { i: k, b: fs().Bytes.fromUint8Array(u8.subarray(k * CH, Math.min(buf.byteLength, (k + 1) * CH))) });
+      await b.commit(); quota('w', top - i);
+      await fs().updateDoc(dref('demos', m.sha), { up: top }); quota('w', 1);
+    }
+    await fs().updateDoc(dref('demos', m.sha), { up: n, done: true, at: Date.now() }); quota('w', 1);
+    st.cat = { ...(st.cat || {}), [m.sha]: { ...meta, up: n, done: true } }; lsSet({ ...lsGet(), cat: st.cat });
+  }
+  async function link(exId, v) {
+    const m = DEMO_MAP[exId]; if (!m || !ok() || !canWrite()) return;
+    try { await fs().setDoc(dref('demoLinks', exId), { ex: exId, sha: m.sha, ok: v || '', st: m.st, at: Date.now() }); quota('w', 1); st.links = { ...(st.links || {}), [exId]: { ex: exId, sha: m.sha, ok: v || '' } }; lsSet({ ...lsGet(), links: st.links }); } catch (e) { hold(e); }
+  }
+  async function push() {
+    if (st.up || !ok()) return; st.up = true; st.s = 'up';
+    try {
+      if (!(await catalog(false))) return;
+      for (const exId of Object.keys(DEMO_URLS)) {
+        if (st.paused) break; try { await sendOne(exId); } catch (e) { hold(e); break; }
+      }
+      const L = st.links || {};
+      for (const exId of Object.keys(DEMO_MAP)) {
+        const m = DEMO_MAP[exId], v = (UI.demoOk || {})[exId], c = st.cat && st.cat[m.sha]; if (!m.sha || !(c && c.done === true)) continue;
+        const cur = L[exId]; if (cur && cur.sha === m.sha && (cur.ok || '') === (v || '')) continue;
+        await link(exId, v || '');
+      }
+    } finally { st.up = false; st.s = 'idle'; paint(); }
+  }
+  async function start() {
+    if (!Cloud.uid) return;
+    try { st.started = true; await demoLoadLocal(); await catalog(false); paint(); await push(); } catch (e) { hold(e); }
+  }
+  function label(exId) {
+    if (!Cloud.uid) return 'Não importada';
+    const f = st.fail[exId]; if (st.q.includes(exId) || st.s === 'down') return 'Recuperando…';
+    return f && f.off ? 'Não disponível offline' : 'Não importada';
+  }
+  function line() {
+    if (!Cloud.uid) return '';
+    const t = st.paused ? 'Cota gratuita do dia atingida; sincronização pausada' : st.err && !st.run && !st.up ? 'Erro de sincronização' : st.s === 'up' ? 'Enviando demonstrações' : st.s === 'down' ? 'Recuperando demonstrações' : navigator.onLine === false ? 'Disponível offline' : (st.cat ? 'Sincronizado com a nuvem' : 'Aguardando a nuvem');
+    return `<div class="xs mu mt8">${emo('☁️')} ${t}${DEMO_LOCAL.n && st.s === 'idle' && !st.paused ? ' · Disponível offline' : ''}</div>`;
+  }
+  return { start, want, push, link, label, line, state: st, _catalog: catalog };
+})();
 
 (function boot() {
   setTheme(UI.theme || 'light');
