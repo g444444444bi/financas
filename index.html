@@ -1066,6 +1066,9 @@ svg.o3{display:block;overflow:visible;filter:drop-shadow(0 8px 10px rgba(36,35,4
   .f4r{grid-template-columns:56px minmax(0,1fr) auto;gap:10px}.f4r .ord{display:none}.f4th{width:56px;height:56px;border-radius:14px}
   .exs .ib{width:34px;height:34px}.fsh,.fset{grid-template-columns:30px minmax(0,.9fr) minmax(0,1fr) minmax(0,.8fr) 42px;gap:6px}.fset .ref{font-size:11.5px}}
 @media(prefers-reduced-motion:reduce){.f4th{transition:none}}
+
+.fw6>.emo,.fw7>.emo,.li .n b>.emo{margin-right:.3em}
+.demo-off{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;width:100%;height:100%;min-height:120px;background:var(--sub);color:var(--mu);font-size:13px;font-weight:600;text-align:center}.demo-off svg{width:28px;height:28px;stroke:var(--mu2)}.demo-off.dmini{min-height:0;width:36px;height:36px}
 </style>
 </head>
 <body>
@@ -2495,7 +2498,7 @@ function vCats() {
 /* ---------- CONFIGURAÇÕES ---------- */
 function vConfig() {
   const d = D(), dark = document.documentElement.dataset.theme === 'dark', demo = isDemo();
-  return `<div class="grid">
+  return `<div class="grid">${cDemoImport('s6')}
   <section class="card s6"><div class="ch"><span class="ttl">Perfil</span></div><div class="rowf mt12"><div class="avatar" style="width:52px;height:52px;font-size:20px">${avatarInner((d.settings.name || 'G')[0].toUpperCase())}</div><div class="grow"><b>${esc(d.settings.name || 'Gabriela')}</b><div class="lbl">Conta pessoal · uso individual</div></div><button class="btn sm" data-act="editProfile">Editar</button></div>
   <hr class="sep"><div class="rowf between wrap"><div><b class="sm fw6">Foto de perfil</b><div class="lbl">Substitui a inicial no menu lateral. Fica salva só no seu perfil.</div></div><div class="rowf">${d.settings.photo ? `<button class="btn sm" data-act="photoPick">${ic('camera', 's')} Trocar foto</button><button class="btn sm dng" data-act="photoRemove">Remover foto</button>` : `<button class="btn sm" data-act="photoPick">${ic('camera', 's')} Enviar foto</button>`}</div></div>
   <hr class="sep"><div class="rowf between"><div><b class="sm fw6">Meta semanal de treinos</b><div class="lbl">${d.settings.weekGoal ? d.settings.weekGoal + ' treinos por semana' : 'Não definida'}</div></div><button class="btn sm" data-act="weekGoal">Definir</button></div>
@@ -5617,16 +5620,16 @@ function fichaEmo(x, d = D()) {
 
 /* ---- demonstrações: vínculo pelo id estável do exercício do programa ---- */
 /* st: c = correspondente (vinculado) · v = variação (só após sua conferência) · n = não localizado */
-const DEMO_MAP = {"mwttra8yz2yubz":{"st":"v","cat":"Elevação Pélvica Na Máquina","obs":"A amplitude curta não está explícita no catálogo.","f":"mwttra8yz2yubz"},"mwttrd8tt007pf":{"st":"v","cat":"Hiperextensão","obs":"Confirmar banco e técnica com foco em glúteos.","f":"mwttrd8tt007pf"},"mwttrrmoqtsi2x":{"st":"v","cat":"Abdução de Quadril em Decúbito Lateral","obs":"O nome do catálogo não confirma o uso de caneleira.","f":"mwttrrmoqtsi2x"},"mwttrx9b7n3n0w":{"st":"c","cat":"Máquina de Abdução de Quadril","f":"mwttrx9b7n3n0w"},"mwtts2v9p9vydf":{"st":"c","cat":"Cadeira flexora","f":"mwtts2v9p9vydf"},"mwttsarvpnjqi8":{"st":"c","cat":"Elevação de Panturrilha Sentado com Alavanca","f":"mwttsarvpnjqi8"},"mwttsika6vpyou":{"st":"n"},"mwttsm7ifqfisc":{"st":"n"},"pe-rafaela-cb-1":{"st":"c","cat":"Serrote","f":"pe-rafaela-cb-1"},"pe-rafaela-cb-2":{"st":"v","cat":"Puxada Alta","obs":"Confirmar pegada e execução frontal.","f":"pe-rafaela-cb-2"},"pe-rafaela-cb-3":{"st":"v","cat":"Puxada Alta com Triângulo","obs":"Pressupõe puxada vertical. Se a ficha indicar remada baixa, este GIF não corresponde.","f":"pe-rafaela-cb-3"},"pe-rafaela-cb-4":{"st":"c","cat":"Voador invertido","f":"pe-rafaela-cb-4"},"pe-rafaela-cb-5":{"st":"c","cat":"Rosca martelo","f":"pe-rafaela-cb-5"},"pe-rafaela-cb-6":{"st":"c","cat":"Rosca direta com barra w","f":"pe-rafaela-cb-6"},"mwttt1reruwo7y":{"st":"c","cat":"Agachamento no Smith","f":"mwttt1reruwo7y"},"mwttt86t72tbfu":{"st":"c","cat":"Leg Press Horizontal","f":"mwttt86t72tbfu"},"mwtttdd9ox6iwb":{"st":"v","cat":"Agachamento Búlgaro com Halteres","obs":"A ficha não especifica o equipamento. Confirmar halteres.","f":"mwtttdd9ox6iwb"},"mwtttknj10jm7m":{"st":"c","cat":"Cadeira extensora","f":"mwtttknj10jm7m"},"mwtttoc99gzehk":{"st":"c","cat":"Máquina de Adução de Quadril","f":"mwtttoc99gzehk"},"mwtttsn7o2d7mo":{"st":"v","cat":"Elevação de Panturrilha na Máquina","obs":"A ficha não especifica o modelo do aparelho.","f":"mwtttsn7o2d7mo"},"mwtttx5xsvsna5":{"st":"n"},"pe-rafaela-ot-1":{"st":"v","cat":"Supino Inclinado na Alavanca","obs":"Confirmar o modelo da máquina articulada.","f":"pe-rafaela-ot-1"},"pe-rafaela-ot-2":{"st":"c","cat":"Supino Reto na Máquina","f":"pe-rafaela-ot-2"},"pe-rafaela-ot-3":{"st":"v","cat":"Voador no pec deck","obs":"Confirmar equipamento e posição dos braços.","f":"pe-rafaela-ot-3"},"pe-rafaela-ot-4":{"st":"c","cat":"Elevação lateral de braços com halteres","f":"pe-rafaela-ot-4"},"pe-rafaela-ot-5":{"st":"v","cat":"Levantamento frontal de cabo com dois braços","obs":"O catálogo mostra dois braços. Confirmar altura da polia e execução.","f":"pe-rafaela-ot-5"},"pe-rafaela-ot-6":{"st":"c","cat":"Tríceps Coice com Cabo","f":"pe-rafaela-ot-6"},"pe-rafaela-ot-7":{"st":"c","cat":"Tríceps pulley corda","f":"pe-rafaela-ot-7"}};
+const DEMO_MAP = {"mwttra8yz2yubz":{"st":"v","cat":"Elevação Pélvica Na Máquina","obs":"A amplitude curta não está explícita no catálogo.","f":"mwttra8yz2yubz","sha":"d2a9bb4bb8286ebbadccac877ff113880e1640914567ce62f271728786ecb344","a":"01-elevacao-pelvica-na-maquina-curto.gif","size":4467270},"mwttrd8tt007pf":{"st":"v","cat":"Hiperextensão","obs":"Confirmar banco e técnica com foco em glúteos.","f":"mwttrd8tt007pf","sha":"ae9d9766907438f5f43d719ef0ff8a67c33b6006d01b777e3b6d929ad320ea49","a":"02-gluteo-no-banco-romano.gif","size":3495846},"mwttrrmoqtsi2x":{"st":"v","cat":"Abdução de Quadril em Decúbito Lateral","obs":"O nome do catálogo não confirma o uso de caneleira.","f":"mwttrrmoqtsi2x","sha":"9cf0d29aa0f7a9164b50442a2aa752ada10ce315e552bf309c118a7f7bd60cfd","a":"03-abducao-com-caneleira.gif","size":1331864},"mwttrx9b7n3n0w":{"st":"c","cat":"Máquina de Abdução de Quadril","f":"mwttrx9b7n3n0w","sha":"e4c434a74d0642f85e5f1eee3a979ea91790abb8a8d77a0bde833c0b985e0b55","a":"04-cadeira-abdutora.gif","size":4817831},"mwtts2v9p9vydf":{"st":"c","cat":"Cadeira flexora","f":"mwtts2v9p9vydf","sha":"f82ba0d85fa3dbbe2cff4b089ef8a09b8254a429610caf676e7f897cefdb8ed9","a":"05-cadeira-flexora.gif","size":3428609},"mwttsarvpnjqi8":{"st":"c","cat":"Elevação de Panturrilha Sentado com Alavanca","f":"mwttsarvpnjqi8","sha":"61a06caa32c4291407afc5c76e996cebb05eadaccd0a26aca0982572487b6151","a":"06-panturrilha-no-banco-soleo.gif","size":3219704},"mwttsika6vpyou":{"st":"n"},"mwttsm7ifqfisc":{"st":"n"},"pe-rafaela-cb-1":{"st":"c","cat":"Serrote","f":"pe-rafaela-cb-1","sha":"58314ba311a2e898727c668002e13bdd910414d300cc47d64b20b991737eeb7e","a":"01-remada-serrote.gif","size":3526883},"pe-rafaela-cb-2":{"st":"v","cat":"Puxada Alta","obs":"Confirmar pegada e execução frontal.","f":"pe-rafaela-cb-2","sha":"6c99de065d9f3d92613e022fafed5dbd87c662e488e3f1dfa266016dc71a8566","a":"02-puxada-frontal.gif","size":2921259},"pe-rafaela-cb-3":{"st":"v","cat":"Puxada Alta com Triângulo","obs":"Pressupõe puxada vertical. Se a ficha indicar remada baixa, este GIF não corresponde.","f":"pe-rafaela-cb-3","sha":"7695ae6ac336eedbf5ac5463361a5f6b542e7ec79b24b6b392d0c39c0d60076d","a":"03-pulley-triangulo.gif","size":2857049},"pe-rafaela-cb-4":{"st":"c","cat":"Voador invertido","f":"pe-rafaela-cb-4","sha":"6180d3c375573f569076781ba8176e88a516935a79e8d8a922af9df90b9288ae","a":"04-voador-inverso.gif","size":4030665},"pe-rafaela-cb-5":{"st":"c","cat":"Rosca martelo","f":"pe-rafaela-cb-5","sha":"7050fe9e044df99cc4cbbde28a0c221c7c78b6cfd736c0de53c6eb76c0b8c021","a":"05-rosca-martelo.gif","size":2393740},"pe-rafaela-cb-6":{"st":"c","cat":"Rosca direta com barra w","f":"pe-rafaela-cb-6","sha":"425696544e46cd2085524d7df310deeb6b5090be6e43d9fb2ca1f11aa1690498","a":"06-biceps-barra-w.gif","size":2245220},"mwttt1reruwo7y":{"st":"c","cat":"Agachamento no Smith","f":"mwttt1reruwo7y","sha":"edfafc5bb16049530d16fec4e1318ac42e5fba3d848701cf4dc59b93b867334a","a":"01-agachamento-no-smith.gif","size":3839501},"mwttt86t72tbfu":{"st":"c","cat":"Leg Press Horizontal","f":"mwttt86t72tbfu","sha":"ccd450b174779dc78dca6461566b08c4c5493cc3a7569eaa46802ebf2dbc87bc","a":"02-leg-press-horizontal.gif","size":3983669},"mwtttdd9ox6iwb":{"st":"v","cat":"Agachamento Búlgaro com Halteres","obs":"A ficha não especifica o equipamento. Confirmar halteres.","f":"mwtttdd9ox6iwb","sha":"263022d5fd716feda638a41ba8807dda9778ccd8b5c37dcb088ae7534b761f57","a":"03-agachamento-bulgaro.gif","size":2856284},"mwtttknj10jm7m":{"st":"c","cat":"Cadeira extensora","f":"mwtttknj10jm7m","sha":"e3a178291c4a8f11c5648bb025f7968d45c775079475a6f26c3a886b5f1bb8a4","a":"04-cadeira-extensora.gif","size":3745178},"mwtttoc99gzehk":{"st":"c","cat":"Máquina de Adução de Quadril","f":"mwtttoc99gzehk","sha":"0669fabb60c20a6aed44c21f6d0dd275f6007b907c0ebcd7f6f8d317dcc97e8e","a":"05-cadeira-adutora.gif","size":3410272},"mwtttsn7o2d7mo":{"st":"v","cat":"Elevação de Panturrilha na Máquina","obs":"A ficha não especifica o modelo do aparelho.","f":"mwtttsn7o2d7mo","sha":"f4022ed9a53574b01db5b7cf60aa7818d5ec2c0cf0831c92bc4aee301c0a0e38","a":"06-panturrilha-no-aparelho.gif","size":3441915},"mwtttx5xsvsna5":{"st":"n"},"pe-rafaela-ot-1":{"st":"v","cat":"Supino Inclinado na Alavanca","obs":"Confirmar o modelo da máquina articulada.","f":"pe-rafaela-ot-1","sha":"18aa0f4f546062c414fd4489c3a0c90a362a5624cc017379cbec7ff2c7d90b64","a":"01-supino-articulado-inclinado.gif","size":4263938},"pe-rafaela-ot-2":{"st":"c","cat":"Supino Reto na Máquina","f":"pe-rafaela-ot-2","sha":"c37f31706f2d0960c6869df0ad3f65f9f5669557727faac66674620f38a15914","a":"02-supino-maquina-reto.gif","size":4021131},"pe-rafaela-ot-3":{"st":"v","cat":"Voador no pec deck","obs":"Confirmar equipamento e posição dos braços.","f":"pe-rafaela-ot-3","sha":"f47943afa952b70139e8923fb9de976dd8058762065082848cb766d40027015f","a":"03-voador.gif","size":3535692},"pe-rafaela-ot-4":{"st":"c","cat":"Elevação lateral de braços com halteres","f":"pe-rafaela-ot-4","sha":"920ec514d4ff3f81e123a29f9c2568c2f5d0c92a9b1dd0a1b581f8df7d633711","a":"04-elevacao-lateral-com-halter.gif","size":2804583},"pe-rafaela-ot-5":{"st":"v","cat":"Levantamento frontal de cabo com dois braços","obs":"O catálogo mostra dois braços. Confirmar altura da polia e execução.","f":"pe-rafaela-ot-5","sha":"130024f7bf757886f097f5dc8324f0ac42b213030da1eae4f400dff6c2ea7f39","a":"05-elevacao-frontal-na-polia-baixa.gif","size":2634257},"pe-rafaela-ot-6":{"st":"c","cat":"Tríceps Coice com Cabo","f":"pe-rafaela-ot-6","sha":"2b1ea85088e754390351317bea6771c1ce392d9b0b9d57eef1313c43029c9150","a":"06-triceps-coice-polia.gif","size":4249191},"pe-rafaela-ot-7":{"st":"c","cat":"Tríceps pulley corda","f":"pe-rafaela-ot-7","sha":"741e9c236e4241224ae22d51040d989f39e18eaae6afed6ae013fc90f69b5684","a":"07-triceps-pulley-com-corda.gif","size":3518172}};
 /** Prévia: arquivos servidos só deste Mac. Produção: vazio até a forma de importação ser aprovada (nada é publicado no GitHub). */
 const DEMO_BASE = window.__PREVIA ? '/demos/' : '';
 function demoOf(exId) {
   const m = exId && DEMO_MAP[exId]; if (!m) return { st: 'n', id: exId };
-  const ok = (UI.demoOk || {})[exId], avail = !!(DEMO_BASE && m.f);
+  const ok = (UI.demoOk || {})[exId], loc = DEMO_URLS[exId], srv = !!(DEMO_BASE && m.f), avail = !!(loc || srv);
   const linked = avail && (m.st === 'c' || (m.st === 'v' && ok === 'ok'));
-  const b = avail ? DEMO_BASE : '';
-  return { ...m, id: exId, ok, linked, pend: avail && m.st === 'v' && !ok, rej: m.st === 'v' && ok === 'no', noFiles: !avail && !!m.f,
-    thumb: b && b + 'thumb/' + exId + '.jpg', poster: b && b + 'thumb/' + exId + '-720.jpg', gif: b && b + 'gif/' + exId + '.gif' };
+  const b = srv ? DEMO_BASE : '';
+  return { ...m, id: exId, ok, linked, local: !!loc, pend: avail && m.st === 'v' && !ok, rej: m.st === 'v' && ok === 'no', noFiles: !avail && !!m.f,
+    thumb: loc ? loc.thumb : b && b + 'thumb/' + exId + '.jpg', poster: loc ? loc.poster : b && b + 'thumb/' + exId + '-720.jpg', gif: loc ? loc.gif : b && b + 'gif/' + exId + '.gif' };
 }
 /** exercício do programa (e o dia) a partir do id */
 function progExById(id, d = D()) {
@@ -5639,13 +5642,125 @@ function progExFor(w, e, d = D()) {
   return day ? (day.ex || []).find(x => exKey(x.name) === k) || null : null;
 }
 const repsTxt = r => r == null || r === '' ? '— reps' : /[^\d.,]/.test(String(r)) ? esc(String(r)) : r + ' reps';
+const DEMO_PH = (cls, txt, title) => `<div class="f4th f4ph ${cls}" role="img" aria-label="${title}" title="${title}">${ic('dumbbell')}<span class="f4ph-t">${txt}</span></div>`;
 function demoThumb(exId, cls = '') {
   const m = demoOf(exId);
-  if (m.linked) return `<button class="f4th ${cls}" data-act="demoOpen" data-id="${exId}" aria-label="Ver demonstração animada"><img src="${m.thumb}" alt="" loading="lazy" decoding="async"><span class="f4th-p">${ic('play')}</span></button>`;
+  if (m.linked) return `<button class="f4th ${cls}" data-act="demoOpen" data-id="${exId}" aria-label="Ver demonstração animada"><img class="dimg" src="${m.thumb}" alt="" decoding="async"><span class="f4th-p">${ic('play')}</span></button>`;
   if (m.pend) return `<button class="f4th f4ph f4pend ${cls}" data-act="demoCheck" data-id="${exId}" aria-label="Conferir demonstração sugerida">${ic('eye')}<span class="f4ph-t">Conferir</span></button>`;
-  return `<div class="f4th f4ph ${cls}" title="${m.noFiles ? 'Demonstração ainda não importada neste aparelho' : 'Sem demonstração disponível'}">${ic('dumbbell')}<span class="f4ph-t">${m.noFiles ? 'Não importada' : 'Sem demo'}</span></div>`;
+  return m.noFiles ? DEMO_PH(cls, 'Não importada', 'Demonstração ainda não importada neste aparelho') : DEMO_PH(cls, 'Sem demo', 'Sem demonstração disponível');
 }
-const demoMini = exId => { const m = demoOf(exId); return m.linked ? `<img class="dmini" src="${m.thumb}" alt="" loading="lazy" decoding="async">` : `<span class="dmini f4ph">${ic('dumbbell')}</span>`; };
+const demoMini = exId => { const m = demoOf(exId); return m.linked ? `<img class="dmini dimg" src="${m.thumb}" alt="" decoding="async">` : `<span class="dmini f4ph">${ic('dumbbell')}</span>`; };
+/* imagem que falhar vira espaço reservado "Demonstração indisponível" (nunca imagem quebrada) */
+document.addEventListener('error', e => {
+  const im = e.target; if (!im || im.tagName !== 'IMG' || !(im.classList.contains('dimg') || im.dataset.gif || im.closest('.demo-big'))) return;
+  const ph = document.createElement('span'); ph.className = 'demo-off ' + (im.classList.contains('dmini') ? 'dmini f4ph' : ''); ph.setAttribute('role', 'img'); ph.setAttribute('aria-label', 'Demonstração indisponível');
+  ph.innerHTML = im.classList.contains('dmini') ? ic('dumbbell') : `${ic('dumbbell')}<span>Demonstração indisponível</span>`;
+  const host = im.closest('.f4th'); if (host) { host.classList.add('f4ph'); host.removeAttribute('data-act'); host.innerHTML = `${ic('dumbbell')}<span class="f4ph-t">Indisponível</span>`; host.title = 'Demonstração indisponível'; return; }
+  im.replaceWith(ph);
+}, true);
+
+/* ---- importação neste aparelho (IndexedDB próprio 'gabivida-demos'; não toca em vidagabriela-files nem em vg.*) ---- */
+const DEMO_DB = 'gabivida-demos', DEMO_URLS = {}, DEMO_COMP = [{"n":"Twist com peso","obs":"Complemento na observação do abdominal remador."},{"n":"Supra curto","obs":"Complemento na observação do abdominal remador."}];
+let DEMO_LOCAL = { n: 0, bytes: 0, at: 0, ok: false }, DEMO_IMP = null, DEMO_DIV = {};
+const demoOwner = () => (typeof Cloud !== 'undefined' && Cloud.uid) || 'local';
+function demoDB() { return new Promise((res, rej) => { if (!window.indexedDB) return rej(new Error('Este navegador não oferece IndexedDB.')); const r = indexedDB.open(DEMO_DB, 1); r.onupgradeneeded = () => { if (!r.result.objectStoreNames.contains('demos')) r.result.createObjectStore('demos', { keyPath: 'id' }); }; r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
+const idbReq = q => new Promise((res, rej) => { q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); });
+const idbDone = tx => new Promise((res, rej) => { tx.oncomplete = res; tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error); });
+async function demoLoadLocal() {
+  try {
+    const db = await demoDB(), all = (await idbReq(db.transaction('demos').objectStore('demos').getAll())).filter(r => !r.owner || r.owner === 'local' || r.owner === demoOwner()); db.close();
+    Object.keys(DEMO_URLS).forEach(k => { const u = DEMO_URLS[k]; [u.gif, u.thumb, u.poster].forEach(x => URL.revokeObjectURL(x)); delete DEMO_URLS[k]; });
+    all.forEach(r => { if (DEMO_MAP[r.id]) DEMO_URLS[r.id] = { gif: URL.createObjectURL(r.gif), thumb: URL.createObjectURL(r.thumb), poster: URL.createObjectURL(r.poster), sha: r.sha, size: r.size, file: r.file }; });
+    DEMO_LOCAL = { n: all.length, bytes: sum(all.map(r => (r.size || 0) + (r.thumb ? r.thumb.size : 0) + (r.poster ? r.poster.size : 0))), at: Math.max(0, ...all.map(r => r.at || 0)), ok: true };
+  } catch (e) { DEMO_LOCAL = { n: 0, bytes: 0, at: 0, ok: false, err: String(e.message || e) }; }
+}
+/* SHA-256: usa crypto.subtle; em endereço sem HTTPS (teste pela rede local) usa a implementação abaixo */
+function sha256js(buf) {
+  const K = new Uint32Array([0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2]);
+  const b = new Uint8Array(buf), n = b.length, L = ((n + 9 + 63) >> 6) << 6, m = new Uint8Array(L); m.set(b); m[n] = 0x80;
+  const dv = new DataView(m.buffer); dv.setUint32(L - 4, (n * 8) >>> 0); dv.setUint32(L - 8, Math.floor(n / 0x20000000));
+  const H = new Uint32Array([0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19]), W = new Uint32Array(64);
+  const r = (x, k) => (x >>> k) | (x << (32 - k));
+  for (let o = 0; o < L; o += 64) {
+    for (let t = 0; t < 16; t++) W[t] = dv.getUint32(o + t * 4);
+    for (let t = 16; t < 64; t++) { const a = W[t - 15], c = W[t - 2]; W[t] = (W[t - 16] + (r(a, 7) ^ r(a, 18) ^ (a >>> 3)) + W[t - 7] + (r(c, 17) ^ r(c, 19) ^ (c >>> 10))) >>> 0; }
+    let [a, bb, c, d, e, f, g, h] = H;
+    for (let t = 0; t < 64; t++) { const t1 = (h + (r(e, 6) ^ r(e, 11) ^ r(e, 25)) + ((e & f) ^ (~e & g)) + K[t] + W[t]) >>> 0, t2 = ((r(a, 2) ^ r(a, 13) ^ r(a, 22)) + ((a & bb) ^ (a & c) ^ (bb & c))) >>> 0; h = g; g = f; f = e; e = (d + t1) >>> 0; d = c; c = bb; bb = a; a = (t1 + t2) >>> 0; }
+    H[0] += a; H[1] += bb; H[2] += c; H[3] += d; H[4] += e; H[5] += f; H[6] += g; H[7] += h;
+  }
+  return [...H].map(x => x.toString(16).padStart(8, '0')).join('');
+}
+async function sha256hex(buf) { if (window.crypto && crypto.subtle && window.isSecureContext) { const d = await crypto.subtle.digest('SHA-256', buf); return [...new Uint8Array(d)].map(x => x.toString(16).padStart(2, '0')).join(''); } return sha256js(buf); }
+/** quadro estático (1º quadro) em JPEG: 320 px para listas e 720 px de capa */
+async function gifFrames(blob) {
+  const url = URL.createObjectURL(blob);
+  try {
+    const im = new Image(); im.src = url; if (im.decode) await im.decode(); else await new Promise((r, j) => { im.onload = r; im.onerror = j; });
+    const mk = (s, q) => { const k = Math.min(1, s / Math.max(im.naturalWidth, im.naturalHeight)), c = document.createElement('canvas'); c.width = Math.max(1, Math.round(im.naturalWidth * k)); c.height = Math.max(1, Math.round(im.naturalHeight * k)); const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(im, 0, 0, c.width, c.height); return new Promise(r => c.toBlob(r, 'image/jpeg', q)); };
+    return [await mk(320, .82), await mk(720, .85)];
+  } finally { URL.revokeObjectURL(url); }
+}
+const fmtMB = b => N(b / 1048576, 1) + ' MB';
+async function demoPut(db, id, f, buf, sha) {
+  const gif = new Blob([buf], { type: 'image/gif' }), [thumb, poster] = await gifFrames(gif);
+  const tx = db.transaction('demos', 'readwrite'); tx.objectStore('demos').put({ id, file: f.name, sha, size: buf.byteLength, gif, thumb, poster, owner: demoOwner(), at: Date.now() }); await idbDone(tx);
+}
+async function demoImport(list) {
+  const files = [...list]; if (!files.length) return;
+  const byName = {}; Object.entries(DEMO_MAP).forEach(([id, m]) => { if (m.a) byName[m.a.toLowerCase()] = id; });
+  const R = { sel: files.length, imp: [], ja: [], div: [], sem: [], err: [], idx: null, bytes0: DEMO_LOCAL.bytes };
+  toast('Importando demonstrações…');
+  let db; try { db = await demoDB(); } catch (e) { R.err.push({ n: 'Armazenamento', m: String(e.message || e) }); DEMO_IMP = R; demoResult(); return; }
+  const seen = new Set();
+  for (const f of files) {
+    try {
+      if (/\.json$/i.test(f.name)) { const js = JSON.parse(await f.text()); const arr = Array.isArray(js) ? js : []; let ok = 0, diff = 0; arr.forEach(it => { const bn = String(it.arquivo || '').split('/').pop().toLowerCase(), id = byName[bn]; if (!bn) return; if (id && it.correspondencia && ({ correspondente: 'c', variante: 'v' }[it.correspondencia] === DEMO_MAP[id].st)) ok++; else diff++; }); R.idx = { ok, diff, nome: f.name }; continue; }
+      const id = byName[f.name.toLowerCase()];
+      if (!id) { R.sem.push(f.name); continue; }
+      if (seen.has(id)) { R.ja.push(f.name + ' (repetido na seleção)'); continue; } seen.add(id);
+      if (!/\.gif$/i.test(f.name) || f.size > 25 * 1048576) { R.err.push({ n: f.name, m: 'formato ou tamanho inválido' }); continue; }
+      const buf = await f.arrayBuffer(), head = String.fromCharCode(...new Uint8Array(buf.slice(0, 6)));
+      if (head !== 'GIF87a' && head !== 'GIF89a') { R.err.push({ n: f.name, m: 'o arquivo não é um GIF válido' }); continue; }
+      const sha = await sha256hex(buf), cur = DEMO_URLS[id], m = DEMO_MAP[id];
+      if (cur && cur.sha === sha) { R.ja.push(f.name); continue; }
+      if (cur || (m.sha && m.sha !== sha)) { DEMO_DIV[id] = { f, buf, sha, motivo: cur ? 'já existe outra demonstração neste aparelho' : 'conteúdo diferente do arquivo conferido no índice' }; R.div.push({ id, n: f.name, m: DEMO_DIV[id].motivo }); continue; }
+      await demoPut(db, id, f, buf, sha); R.imp.push({ id, n: f.name, st: m.st });
+    } catch (e) { R.err.push({ n: f.name, m: String(e.message || e) }); }
+  }
+  db.close();
+  try { if (navigator.storage && navigator.storage.persist) R.persist = await navigator.storage.persist(); } catch (e) { }
+  try { if (navigator.storage && navigator.storage.estimate) R.est = await navigator.storage.estimate(); } catch (e) { }
+  await demoLoadLocal(); DEMO_IMP = R; render(); demoResult();
+}
+function demoCounts() {
+  const p = d => (d.programs.find(x => x.id === 'prog-rafaela') || activeProg(d) || sortedProgs(d)[0]);
+  const P = p(D()), ex = P ? P.days.flatMap(x => x.ex || []) : [], ms = ex.map(e => demoOf(e.id));
+  return { conf: ms.filter(m => m.linked && m.st === 'c').length, varOk: ms.filter(m => m.linked && m.st === 'v').length, pend: ms.filter(m => m.st === 'v' && !m.linked && !m.rej).length, rej: ms.filter(m => m.rej).length, semDemo: ms.filter(m => !m.linked).length, semGif: ex.filter(e => !(DEMO_MAP[e.id] || {}).a).length, falta: ex.filter(e => (DEMO_MAP[e.id] || {}).a && !DEMO_URLS[e.id] && !DEMO_BASE).length };
+}
+function demoResult() {
+  const R = DEMO_IMP; if (!R) return; const c = demoCounts();
+  const row = (l, v, cls = '') => `<div class="kpi"><div class="l">${l}</div><div class="n ${cls}">${v}</div></div>`;
+  const lst = (t, a, f) => a.length ? `<div class="mk">${t}</div><div class="xs mt4" style="line-height:1.6">${a.map(f).join('<br>')}</div>` : '';
+  openHTML(`<div class="dh"><div><h3>Resultado da importação</h3><p>Demonstrações guardadas só neste aparelho</p></div><button class="ib" data-close aria-label="Fechar">${ic('x')}</button></div><div class="db">
+   <div class="kpis" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr))">${row('Arquivos selecionados', R.sel)}${row('Importados agora', R.imp.length, R.imp.length ? 'pos' : '')}${row('Já existentes', R.ja.length)}${row('Correspondências confirmadas', c.conf + c.varOk, 'pos')}${row('Variações pendentes', c.pend, c.pend ? 'warn' : '')}${row('Sem correspondência', R.sem.length)}${row('Exercícios sem demonstração em uso', c.semDemo + `<div class="s" style="font-size:11px;font-weight:500">${c.semGif} sem GIF · ${c.pend} variações aguardando</div>`)}${row('Erros', R.err.length, R.err.length ? 'neg' : '')}${row('Espaço usado (demonstrações)', fmtMB(DEMO_LOCAL.bytes))}</div>
+   ${R.idx ? `<div class="sm mt12">Índice <b>${esc(R.idx.nome)}</b>: ${R.idx.ok} entradas conferem com o vínculo do app${R.idx.diff ? `, <b class="warn">${R.idx.diff} diferem</b> (o app mantém o vínculo conferido)` : ''}.</div>` : ''}
+   ${R.div.length ? `<div class="mk">Divergências — nada foi substituído</div>${R.div.map(x => `<div class="rowf between wrap sess" style="border-color:var(--ambar)"><span class="sm"><b>${esc(x.n)}</b><span class="xs mu" style="display:block">${esc(x.m)}</span></span><span class="rowf"><button class="btn sm" data-act="demoDivKeep" data-id="${x.id}">Manter atual</button><button class="btn sm pri" data-act="demoDivUse" data-id="${x.id}">Usar este arquivo</button></span></div>`).join('')}` : ''}
+   ${lst('Importados', R.imp, x => `${emo('✅')} ${esc(x.n)}${x.st === 'v' ? ' <span class="chip am">variação: aguarda sua conferência</span>' : ''}`)}
+   ${lst('Já existentes (não duplicados)', R.ja, x => esc(x))}${lst('Sem correspondência (ignorados)', R.sem, x => esc(x))}${lst('Erros', R.err, x => `<b>${esc(x.n)}</b>: ${esc(x.m)}`)}
+   <div class="xs mu mt12">${R.persist === true ? 'O navegador concedeu armazenamento persistente.' : 'O navegador não garantiu armazenamento persistente: em pouco espaço ou após um período sem uso, ele pode apagar estas cópias. Os originais continuam na sua pasta.'}${R.est && R.est.quota ? ` Uso total deste site no navegador: ${fmtMB(R.est.usage || 0)} de ${fmtMB(R.est.quota)} disponíveis.` : ''}</div>
+   <div class="xs mu mt8">${DEMO_CREDIT}</div></div><div class="df"><button class="btn pri" data-close>Fechar</button></div>`, true);
+}
+function cDemoImport(cls = 's12') {
+  const c = demoCounts();
+  return `<section class="card ${cls}"><div class="ch"><span class="ttl">${emo('🎞️')} Demonstrações neste aparelho</span></div>
+   <div class="lbl mt8">${DEMO_LOCAL.n ? `${DEMO_LOCAL.n} GIF${DEMO_LOCAL.n > 1 ? 's' : ''} importado${DEMO_LOCAL.n > 1 ? 's' : ''} · ${fmtMB(DEMO_LOCAL.bytes)} · última importação ${new Date(DEMO_LOCAL.at).toLocaleDateString('pt-BR')}` : DEMO_LOCAL.ok ? 'Nenhuma demonstração importada neste aparelho.' : 'Armazenamento local indisponível neste navegador.'}${DEMO_BASE ? ' · prévia: arquivos também servidos por este Mac' : ''}</div>
+   <div class="rowf wrap mt12" style="gap:8px"><button class="btn pri" data-act="demoPick">${ic('upload', 's')} Importar demonstrações neste aparelho</button>${'webkitdirectory' in document.createElement('input') && !/iPhone|iPad/.test(navigator.userAgent) ? `<button class="btn sm" data-act="demoPickDir">${ic('upload', 's')} Escolher a pasta</button>` : ''}${DEMO_IMP ? `<button class="btn sm" data-act="demoShowRes">Ver último resultado</button>` : ''}${DEMO_LOCAL.n ? `<button class="btn sm gh dng" data-act="demoClear">Remover cópias deste aparelho</button>` : ''}</div>
+   <div class="xs mu mt8">Selecione os GIFs (vários de uma vez) e, se quiser, o <b>indice.json</b>. O app reconhece cada arquivo pelo nome do índice e confere o conteúdo; variações só são usadas depois da sua conferência. Reimportar não duplica.</div>
+   <input type="file" id="demoFiles" multiple accept=".gif,image/gif,.json,application/json" hidden><input type="file" id="demoDir" webkitdirectory multiple hidden></section>`;
+}
+document.addEventListener('change', e => { if (e.target && (e.target.id === 'demoFiles' || e.target.id === 'demoDir')) { const fl = e.target.files; demoImport(fl).finally(() => { e.target.value = ''; }); } });
+demoLoadLocal().then(() => { if (DEMO_LOCAL.n && typeof render === 'function') try { render(); } catch (e) { } });
+
 
 /* ---- GIF só quando visível: um por vez, pausa (volta ao quadro estático) fora da tela ---- */
 /* movimento reduzido: na tela do treino fica o quadro estático; a animação abre ao ampliar */
@@ -5661,12 +5776,12 @@ let _demoMO = 0; new MutationObserver(() => { if (_demoMO) return; _demoMO = req
 
 const DEMO_CREDIT = 'Fonte: GIF do Treino (gifdotreino.com). Uso pessoal; todos os direitos pertencem ao titular.';
 function demoModal(id, check) {
-  const r = progExById(id), m = demoOf(id); if (!r || !(m.linked || check)) return;
+  const r = progExById(id), m = demoOf(id); if (!r || !m.gif || !(m.linked || check)) { if (r && check) toast('Demonstração indisponível neste aparelho. Importe o GIF primeiro.', 'err'); return; }
   const E = fichaEmo(r.day), src = m.gif;
   document.querySelectorAll('#app img[data-gif]').forEach(im => demoSwap(im, false));
   const dl = openHTML(`<div class="dh"><div><h3>${emo(E)} ${esc(r.e.name)}</h3><p>${esc(r.day.name)}${r.e.grp && exKey(r.e.grp) !== exKey(r.day.name) ? ' · ' + esc(r.e.grp) : ''}</p></div><button class="ib" data-close aria-label="Fechar">${ic('x')}</button></div>
   <div class="db"><div class="demo-big"><img src="${src}" alt="Demonstração animada: ${esc(r.e.name)}" decoding="async"></div>
-   ${check ? `<div class="sess mt12" style="border-color:var(--ambar)"><span class="chip am">Variação — confira antes de vincular</span><div class="sm mt8">Sugestão do catálogo: <b>${esc(m.cat)}</b></div>${m.obs ? `<div class="sm mt4">${esc(m.obs)}</div>` : ''}<div class="xs mu mt8">O nome e os dados do exercício na sua ficha não mudam. Se você não vincular, o exercício fica sem demonstração.</div></div>`
+   ${check ? `<div class="sess mt12" style="border-color:var(--ambar)"><span class="chip am">Variação — confira antes de vincular</span><div class="sm mt8">Exercício na sua ficha: <b>${esc(r.e.name)}</b></div><div class="sm mt4">Demonstração disponível: <b>${esc(m.cat)}</b></div><div class="sm mt4"><b>Diferença identificada:</b> ${esc(m.obs || 'não informada no índice')}</div><div class="xs mu mt8">O nome e os dados do exercício na sua ficha não mudam. Se você não vincular, o exercício fica sem demonstração.</div></div>`
       : `<div class="rowf wrap mt12" style="gap:6px"><span class="chip ok">${m.st === 'c' ? 'Demonstração correspondente' : 'Variação conferida por você'}</span><span class="chip mu">Catálogo: ${esc(m.cat)}</span></div>`}
    ${r.e.note ? `<div class="sm mt12"><b>Observação da ficha:</b> ${esc(r.e.note)}</div>` : ''}
    <div class="xs mu mt12">${DEMO_CREDIT}</div></div>
@@ -5702,11 +5817,14 @@ function cDemos(p) {
   const days = WD_ORDER.map(wd => p.days.find(x => x.wd === wd)).filter(x => x && (x.ex || []).length);
   const all = days.flatMap(day => day.ex.map(e => ({ day, e, m: demoOf(e.id) })));
   if (!all.some(x => DEMO_MAP[x.e.id])) return '';
-  const c = { lk: all.filter(x => x.m.linked).length, pend: all.filter(x => x.m.pend).length, rej: all.filter(x => x.m.rej).length, sem: all.filter(x => !x.m.linked && !x.m.pend && !x.m.rej).length };
-  const vs = all.filter(x => DEMO_MAP[x.e.id] && DEMO_MAP[x.e.id].st === 'v');
-  return `<section class="card s12"><div class="ch"><span class="ttl">Demonstrações dos exercícios</span><span class="xs mu">${DEMO_BASE ? 'arquivos deste Mac (prévia)' : 'não importadas neste aparelho'}</span></div>
-   <div class="kpis mt8"><div class="kpi"><div class="l">Vinculadas</div><div class="n pos">${c.lk}</div></div><div class="kpi"><div class="l">Aguardando conferência</div><div class="n warn">${c.pend}</div></div><div class="kpi"><div class="l">Não correspondem</div><div class="n">${c.rej}</div></div><div class="kpi"><div class="l">Sem demonstração</div><div class="n">${c.sem}</div></div></div>
-   ${vs.length ? `<div class="mk">Variações para conferir</div><div class="list mt8">${vs.map(({ day, e, m }) => `<div class="li"><span class="dmini-w">${DEMO_BASE && m.f ? `<img class="dmini" src="${DEMO_BASE}thumb/${e.id}.jpg" alt="" decoding="async">` : `<span class="dmini f4ph">${ic('dumbbell')}</span>`}</span><div class="n"><b class="fw6">${emo(fichaEmo(day))} ${esc(e.name)}</b><small>Catálogo: ${esc(m.cat)}${m.obs ? ' · ' + esc(m.obs) : ''}</small></div><span class="chip ${m.linked ? 'ok' : m.rej ? 'mu' : 'am'}">${m.linked ? 'Vinculada' : m.rej ? 'Não corresponde' : 'Aguardando'}</span>${DEMO_BASE && m.f ? `<button class="btn sm" data-act="demoCheck" data-id="${e.id}">${m.ok ? 'Rever' : 'Conferir'}</button>` : ''}</div>`).join('')}</div>` : ''}
+  const isV = x => (DEMO_MAP[x.e.id] || {}).st === 'v';
+  const c = { lk: all.filter(x => x.m.linked && !isV(x)).length, vok: all.filter(x => x.m.linked && isV(x)).length, pend: all.filter(x => isV(x) && !x.m.linked && !x.m.rej).length, rej: all.filter(x => x.m.rej).length, sem: all.filter(x => !(DEMO_MAP[x.e.id] || {}).a).length };
+  const vs = all.filter(isV), k = (l, v, cls = '') => `<div class="kpi"><div class="l">${l}</div><div class="n ${cls}">${v}</div></div>`;
+  return `${cDemoImport('s12')}<section class="card s12"><div class="ch"><span class="ttl">Demonstrações dos exercícios</span></div>
+   <div class="kpis mt8" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr))">${k('Correspondentes vinculadas', c.lk, 'pos')}${k('Variações aprovadas', c.vok, c.vok ? 'pos' : '')}${k('Variações pendentes', c.pend, c.pend ? 'warn' : '')}${k('Não correspondem', c.rej)}${k('Exercícios sem GIF', c.sem)}${k('Complementos sem GIF', DEMO_COMP.length)}</div>
+   ${vs.length ? `<div class="mk">Variações — uma a uma, aguardando sua confirmação</div><div class="list mt8">${vs.map(({ day, e, m }) => { const md = DEMO_MAP[e.id], has = !!m.thumb;
+     return `<div class="li" style="align-items:flex-start"><span class="dmini-w">${has ? `<img class="dmini dimg" src="${m.thumb}" alt="" decoding="async">` : `<span class="dmini f4ph" title="Demonstração indisponível">${ic('dumbbell')}</span>`}</span><div class="n"><b class="fw6">${emo(fichaEmo(day))} ${esc(e.name)}</b><small>Demonstração disponível: ${esc(md.cat)}${has ? '' : ' · arquivo não importado neste aparelho'}</small><small><b>Diferença identificada:</b> ${esc(md.obs || 'não informada no índice')}</small></div><span class="chip ${m.linked ? 'ok' : m.rej ? 'mu' : 'am'}">${m.linked ? 'Aprovada' : m.rej ? 'Não corresponde' : 'Pendente'}</span>${has ? `<button class="btn sm" data-act="demoCheck" data-id="${e.id}">${m.ok ? 'Rever' : 'Conferir'}</button>` : ''}</div>`; }).join('')}</div>` : ''}
+   ${DEMO_COMP.length ? `<div class="mk">Movimentos complementares sem GIF</div><div class="xs mt4">${DEMO_COMP.map(x => `${esc(x.n)}${x.obs ? ' — ' + esc(x.obs) : ''}`).join('<br>')}</div>` : ''}
    <div class="xs mu mt12">${DEMO_CREDIT} Os arquivos não vão para o GitHub. Exercícios sem arquivo mostram um espaço reservado até existir uma demonstração correta.</div></section>`;
 }
 
@@ -5782,6 +5900,12 @@ function exFichaEmo(key, d = D()) { const p = activeProg(d) || sortedProgs(d)[0]
 if (!ICONS.expand) ICONS.expand = '<path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/>';
 const _fit4Start = ACT.startSess, _fit4Resume = ACT.resumeSess, _fit4Reopen = ACT.reopenSess;
 Object.assign(ACT, {
+  demoPick: () => { const i = $('#demoFiles'); if (i) i.click(); },
+  demoPickDir: () => { const i = $('#demoDir'); if (i) i.click(); },
+  demoShowRes: () => demoResult(),
+  demoClear: async () => { if (!await confirmBox({ title: 'Remover as demonstrações deste aparelho?', text: 'Apaga só as cópias dos GIFs guardadas neste navegador. Treinos, fichas, documentos e os arquivos originais não são afetados.', ok: 'Remover cópias' })) return; try { const db = await demoDB(), tx = db.transaction('demos', 'readwrite'); tx.objectStore('demos').clear(); await idbDone(tx); db.close(); } catch (e) { toast('Não foi possível remover: ' + (e.message || e), 'err'); } await demoLoadLocal(); render(); toast('Cópias removidas deste aparelho.'); },
+  demoDivKeep: el => { delete DEMO_DIV[el.dataset.id]; if (DEMO_IMP) DEMO_IMP.div = DEMO_IMP.div.filter(x => x.id !== el.dataset.id); toast('Mantida a demonstração atual.'); demoResult(); },
+  demoDivUse: async el => { const x = DEMO_DIV[el.dataset.id]; if (!x) return; if (!await confirmBox({ title: 'Usar este arquivo?', text: x.motivo + '. O arquivo escolhido passa a ser a demonstração deste exercício neste aparelho.', ok: 'Usar este arquivo', danger: false })) return; try { const db = await demoDB(); await demoPut(db, el.dataset.id, x.f, x.buf, x.sha); db.close(); } catch (e) { toast(String(e.message || e), 'err'); return; } delete DEMO_DIV[el.dataset.id]; if (DEMO_IMP) DEMO_IMP.div = DEMO_IMP.div.filter(y => y.id !== el.dataset.id); await demoLoadLocal(); render(); demoResult(); },
   startSess: el => { S.sessIdx = null; S.sessView = ''; _fit4Start(el); },
   resumeSess: el => { S.sessIdx = null; S.sessView = ''; _fit4Resume(el); },
   reopenSess: el => { S.sessIdx = null; S.sessView = 'lista'; _fit4Reopen(el); },
