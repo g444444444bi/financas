@@ -2277,7 +2277,7 @@ function cAptoMini() {
 function cFitness() {
   const d = D(), f = fitStats(d);
   if (!d.workouts.length && !f.wts.length) return `<section class="card s8">${illus('dumbbell', 't')}<div class="ch"><span class="ttl">Fitness</span></div>${emptyBox('dumbbell', 'Nenhum treino registrado', 'Registre seu primeiro treino.', 'Novo treino', 'add', 'data-v="workout"')}</section>`;
-  const today = (() => { const pg = activeProg(d); if (pg) { for (let i = 0; i < 7; i++) { const dt = dateAdd(f.T, i), day = progDay(pg, parseD(dt).getDay()); if (day && day.kind !== 'descanso' && !(i === 0 && fitDates(d)[f.T])) return { name: day.name, when: i === 0 ? 'hoje' : i === 1 ? 'amanhã' : WD3[parseD(dt).getDay()].toLowerCase() }; } } const lp = d.plan.find(p => p.wd === parseD(f.T).getDay()); return lp ? { name: lp.name, when: 'hoje' } : null; })();
+  const today = (() => { const pg = activeProg(d); if (pg) { for (let i = 0; i < 7; i++) { const dt = dateAdd(f.T, i), day = progDay(pg, parseD(dt).getDay(), dt); if (day && day.kind !== 'descanso' && !(i === 0 && fitDates(d)[f.T])) return { name: day.name, when: i === 0 ? 'hoje' : i === 1 ? 'amanhã' : WD3[parseD(dt).getDay()].toLowerCase() }; } } const lp = d.plan.find(p => p.wd === parseD(f.T).getDay()); return lp ? { name: lp.name, when: 'hoje' } : null; })();
   const lastW = d.workouts.filter(w => w.status !== 'andamento').sort((a, b) => b.date.localeCompare(a.date))[0], pgName = (activeProg(d) || {}).name;
   const dw = fitWeekHTML(d);
   const w = f.weight, delta = w && f.first ? w.kg - f.first.kg : 0;
@@ -2321,7 +2321,7 @@ function cDocs(cls = 's6') {
 /** treino previsto: mesma regra do cartão Fitness (programa ativo ou plano semanal) */
 function treinoPrevisto(d = D()) {
   const T = todayISO(), pg = activeProg(d);
-  if (pg) { for (let i = 0; i < 7; i++) { const dt = dateAdd(T, i), day = progDay(pg, parseD(dt).getDay()); if (day && day.kind !== 'descanso' && !(i === 0 && fitDates(d)[T])) return { name: day.name, when: i === 0 ? 'hoje' : i === 1 ? 'amanhã' : WDL[parseD(dt).getDay()].toLowerCase(), prog: pg.name }; } }
+  if (pg) { for (let i = 0; i < 7; i++) { const dt = dateAdd(T, i), day = progDay(pg, parseD(dt).getDay(), dt); if (day && day.kind !== 'descanso' && !(i === 0 && fitDates(d)[T])) return { name: day.name, when: i === 0 ? 'hoje' : i === 1 ? 'amanhã' : WDL[parseD(dt).getDay()].toLowerCase(), prog: pg.name }; } }
   const lp = d.plan.find(p => p.wd === parseD(T).getDay()); return lp ? { name: lp.name, when: 'hoje', prog: '' } : null;
 }
 const hello = () => { const h = new Date().getHours(); return h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite'; };
@@ -2635,7 +2635,19 @@ const PROG_L = { planejado: 'Planejado', andamento: 'Em andamento', concluido: '
 const progPill = p => { const s = progStatus(p); return `<span class="pill ${s === 'andamento' ? 'bl' : s === 'concluido' ? 'gr' : ''}">${PROG_L[s]}</span>`; };
 const activeProg = (d = D()) => sortedProgs(d).find(p => progStatus(p) === 'andamento') || null;
 const progForDate = (date, d = D()) => sortedProgs(d).find(p => date >= p.start && date <= p.end) || null;
-const progDay = (p, wd) => p && p.days.find(x => x.wd === wd) || null;
+/* programação temporária: só código, sem gravar dados. Dentro do período, o dia da semana usa outra ficha já existente do mesmo programa
+   (sem duplicar fichas); fora dele, volta sozinho à rotina original. Cada sessão continua sendo um registro próprio. */
+const PROG_TEMP = [{ prog: 'prog-rafaela', start: '2026-11-23', end: '2026-12-20', map: { 5: 'pd-rafaela-1', 6: 'pd-rafaela-2' } }];
+const progTemp = (p, dt) => p && dt && PROG_TEMP.find(t => t.prog === p.id && dt >= t.start && dt <= t.end) || null;
+const progDay = (p, wd, dt) => { if (!p) return null; const t = progTemp(p, dt), id = t && t.map[wd], r = id && p.days.find(x => x.id === id); return r || p.days.find(x => x.wd === wd) || null; };
+/** rotina da semana na data (cópia só para exibir; wd = dia da semana do espaço) */
+const progWeek = (p, dt) => WD_ORDER.map(wd => { const x = progDay(p, wd, dt); return x && (x.wd === wd ? x : { ...x, wd }); }).filter(Boolean);
+function progTempNote(p, T = todayISO()) {
+  const t = PROG_TEMP.find(x => x.prog === p.id && T <= x.end); if (!t) return '';
+  const nm = (x, wd) => x ? `${WDL[wd].toLowerCase()} ${emo(fichaEmo(x))} ${esc(x.name)}` : '';
+  const wds = Object.keys(t.map).map(Number), novo = wds.map(wd => nm(p.days.find(x => x.id === t.map[wd]), wd)).filter(Boolean).join(' e '), orig = wds.map(wd => nm(p.days.find(x => x.wd === wd), wd)).filter(Boolean).join(' e ');
+  return `<div class="lbl mt4">Programação temporária de ${fdate(t.start).slice(0, 5)} a ${fdate(t.end).slice(0, 5)}: ${novo}. A partir de ${fdate(dateAdd(t.end, 1)).slice(0, 5)}, volta sozinha à rotina original (${orig}).</div>`;
+}
 const inProgress = (d = D()) => d.workouts.find(w => w.status === 'andamento') || null;
 
 /** aderência: dias planejados (não descanso) no período × dias com treino registrado */
@@ -2643,12 +2655,12 @@ function adherence(p, d = D()) {
   const T = todayISO(), end = p.end < T ? p.end : T, dates = new Set(Object.keys(fitDates(d)));
   let planned = 0, realized = 0, missed = 0;
   for (let dt = p.start; dt <= end; dt = dateAdd(dt, 1)) {
-    const day = progDay(p, parseD(dt).getDay()); if (!day || day.kind === 'descanso') continue;
+    const day = progDay(p, parseD(dt).getDay(), dt); if (!day || day.kind === 'descanso') continue;
     const done = dates.has(dt);
     if (dt === T && !done) continue; // hoje ainda pode ser feito
     planned++; if (done) realized++; else missed++;
   }
-  const planDates = new Set(); for (let dt = p.start; dt <= end; dt = dateAdd(dt, 1)) { const day = progDay(p, parseD(dt).getDay()); if (day && day.kind !== 'descanso') planDates.add(dt); }
+  const planDates = new Set(); for (let dt = p.start; dt <= end; dt = dateAdd(dt, 1)) { const day = progDay(p, parseD(dt).getDay(), dt); if (day && day.kind !== 'descanso') planDates.add(dt); }
   const extras = [...dates].filter(x => x >= p.start && x <= end && !planDates.has(x)).length;
   return { planned, realized, missed, extras, pct: planned ? Math.round(realized / planned * 100) : 0 };
 }
@@ -2705,7 +2717,7 @@ function cPrograma() {
   const d = D(), p = activeProg(d) || sortedProgs(d)[0];
   if (!p) return `<section class="card">${illus('dumbbell', 't')}<div class="ch"><span class="ttl">Programa de treino</span></div>${emptyBox('dumbbell', 'Nenhum programa de treino', 'Cadastre o programa da sua professora para acompanhar rotina, cargas e aderência.', 'Novo programa', 'progForm')}</section>`;
   const st = progStatus(p), a = adherence(p, d), total = Math.max(1, daysBetween(p.start, p.end)), done = clamp(daysBetween(p.start, todayISO()), 0, total);
-  const day = st === 'andamento' ? progDay(p, parseD(todayISO()).getDay()) : null, cur = inProgress(d), tw = fitDates(d)[todayISO()];
+  const day = st === 'andamento' ? progDay(p, parseD(todayISO()).getDay(), todayISO()) : null, cur = inProgress(d), tw = fitDates(d)[todayISO()];
   return `<section class="card">${illus('dumbbell', 't')}<div class="ch"><span class="ttl">${esc(p.name)}</span>${progPill(p)}</div>
   <div class="lbl">${p.pro ? 'Profissional: ' + esc(p.pro) + ' · ' : ''}${fdate(p.start)} a ${fdate(p.end)}${p.goal ? ' · ' + esc(p.goal) : ''}</div>
   <div class="mt12" style="max-width:520px">${pbar(done / total * 100, 't')}<div class="lbl mt4">${st === 'andamento' ? `Dia ${done} de ${total}` : st === 'planejado' ? 'Começa em ' + fdate(p.start) : 'Programa encerrado — todo o histórico foi mantido'}</div></div>
@@ -2719,7 +2731,7 @@ function vPrograma() {
   if (!progs.length) return `<section class="card">${emptyBox('dumbbell', 'Nenhum programa de treino', 'Cadastre o programa da sua professora.', 'Novo programa', 'progForm')}</section>`;
   if (!S.progSel || !d.programs.some(p => p.id === S.progSel)) S.progSel = (activeProg(d) || progs[0]).id;
   const p = d.programs.find(x => x.id === S.progSel), st = progStatus(p), a = adherence(p, d), cur = inProgress(d), tw = fitDates(d)[todayISO()];
-  const days = WD_ORDER.map(wd => p.days.find(x => x.wd === wd)).filter(Boolean);
+  const days = progWeek(p, todayISO());
   const day = S.dayOpen && p.days.find(x => x.id === S.dayOpen);
   const cmpA = d.programs.find(x => x.id === S.cmpA) || progs[1] || progs[0], cmpB = d.programs.find(x => x.id === S.cmpB) || progs[0];
   const m1 = cmpA && progMetrics(cmpA, d), m2 = cmpB && progMetrics(cmpB, d);
@@ -2727,7 +2739,7 @@ function vPrograma() {
   const dv = (a, b, u = '', dec = 1) => a == null || b == null ? '—' : (b - a > 0 ? '+' : '') + N(b - a, dec) + u;
   return `<div class="grid">
   <section class="card s12">${illus('dumbbell', 't')}<div class="rowf wrap" style="gap:12px"><select class="inp" style="width:auto;max-width:100%;padding-right:34px" data-act="progSelSel" aria-label="Programa">${progs.map(x => `<option value="${x.id}" ${x.id === p.id ? 'selected' : ''}>${esc(x.name)} (${fdate(x.start).slice(0, 5)}–${fdate(x.end).slice(0, 5)})</option>`).join('')}</select>${progPill(p)}</div>
-   <div class="lbl mt8">${p.pro ? 'Profissional: ' + esc(p.pro) + ' · ' : ''}${fdate(p.start)} a ${fdate(p.end)}${p.goal ? ' · Objetivo: ' + esc(p.goal) : ''}</div>${p.notes ? `<div class="lbl mt4">${esc(p.notes)}</div>` : ''}
+   <div class="lbl mt8">${p.pro ? 'Profissional: ' + esc(p.pro) + ' · ' : ''}${fdate(p.start)} a ${fdate(p.end)}${p.goal ? ' · Objetivo: ' + esc(p.goal) : ''}</div>${p.notes ? `<div class="lbl mt4">${esc(p.notes)}</div>` : ''}${progTempNote(p)}
    <div class="kpis mt12"><div class="kpi"><div class="l">Treinos planejados</div><div class="n">${a.planned}</div></div><div class="kpi"><div class="l">Realizados</div><div class="n">${a.realized}</div></div><div class="kpi"><div class="l">Perdidos</div><div class="n">${a.missed}</div></div><div class="kpi"><div class="l">Aderência</div><div class="n">${a.pct}<small>%</small></div></div></div>
    <div class="rowf wrap mt16"><button class="btn sm pri" data-act="progForm">${ic('plus', 's')} Novo programa</button><button class="btn sm" data-act="progEdit" data-id="${p.id}">${ic('pencil', 's')} Editar</button>${st === 'concluido' && p.closed ? `<button class="btn sm" data-act="progReopen" data-id="${p.id}">Reabrir programa</button>` : st === 'andamento' ? `<button class="btn sm" data-act="progClose" data-id="${p.id}">Encerrar programa</button>` : ''}<button class="btn sm gh dng" data-act="del" data-t="prog" data-id="${p.id}">${ic('trash', 's')} Excluir</button></div></section>
   ${day ? `<div class="s12">${vDia(p, day)}</div>` : `<section class="card s12"><div class="rowf between mb8"><span class="ttl">Rotina semanal</span><button class="btn sm" data-act="dayEdit" data-pid="${p.id}">${ic('plus', 's')} Dia</button></div>
@@ -4749,7 +4761,7 @@ function agendaDerived(start, n, d = D()) {
     const h = holidayOf(dt); if (h) add(dt, { k: 'hol', label: h.name, scope: h.scope });
     const real = fd[dt] || [];
     if (real.length) real.forEach(w => add(dt, { k: 'wk', label: w.pseudo ? 'Atividade física realizada' : wLabel(w), done: true }));
-    else if (dt >= T) { const p = progForDate(dt, d), day = p && progDay(p, parseD(dt).getDay()); if (day && day.kind !== 'descanso') add(dt, { k: 'wk', label: day.kind === 'futevolei' ? 'FTV' : 'Academia — ' + day.name, done: false }); }
+    else if (dt >= T) { const p = progForDate(dt, d), day = p && progDay(p, parseD(dt).getDay(), dt); if (day && day.kind !== 'descanso') add(dt, { k: 'wk', label: day.kind === 'futevolei' ? 'FTV' : 'Academia — ' + day.name, done: false }); }
   });
   yms.forEach(ym => monthItems(ym, d).forEach(it => { if (it.type !== 'out' || it.date < first || it.date > last) return; add(it.date, { k: 'bill', label: it.desc, val: it.val, paid: it.paid, over: it.over }); }));
   return out;
@@ -5565,7 +5577,7 @@ function cObraEvo(cls = 's8') {
 /* ---------- FITNESS: estados do dia, semana clicável e detalhe das sessões ---------- */
 function dayState(dt, d = D()) {
   const T = todayISO(), wd = parseD(dt).getDay(), ws = d.workouts.filter(w => w.date === dt && w.status !== 'andamento').sort((a, b) => (a.time || '').localeCompare(b.time || ''));
-  const ac = (d.activity || []).filter(a => a.date === dt), pg = progForDate(dt, d), pd = pg && progDay(pg, wd), pl = d.plan.find(p => p.wd === wd);
+  const ac = (d.activity || []).filter(a => a.date === dt), pg = progForDate(dt, d), pd = pg && progDay(pg, wd, dt), pl = d.plan.find(p => p.wd === wd);
   const prev = pd ? (pd.kind === 'descanso' ? '' : pd.name) : pl ? pl.name : '';
   if (ws.length || ac.length) return { k: 'ok', l: 'Realizado', ws, ac, prev, pd };
   if (pd && pd.kind === 'descanso') return { k: 'rest', l: 'Descanso', ws, ac, prev: '', pd };
@@ -5807,7 +5819,7 @@ function vDia(p, day) {
   const d = D(), cur = inProgress(d), same = cur && cur.dayId === day.id && cur.date === todayISO(), E = fichaEmo(day);
   const tw = d.workouts.filter(w => w.dayId === day.id && w.date === todayISO()).sort((a, b) => (b.status === 'andamento') - (a.status === 'andamento'))[0];
   const nSets = sum(day.ex.map(e => +e.sets || 0)), nDemo = day.ex.filter(e => demoOf(e.id).linked).length, nPend = day.ex.filter(e => demoOf(e.id).pend).length;
-  return `<section class="card"><div class="rowf wrap between"><div class="rowf"><button class="ib bord" data-act="closeDay" aria-label="Voltar">${ic('left', 's')}</button><div><div class="md2">${emo(E)} ${WDL[day.wd]} · ${esc(day.name)}</div><div class="lbl">${esc(p.name)}${p.pro ? ' · ' + esc(p.pro) : ''} · ${fdate(p.start)} a ${fdate(p.end)}</div></div></div>
+  return `<section class="card"><div class="rowf wrap between"><div class="rowf"><button class="ib bord" data-act="closeDay" aria-label="Voltar">${ic('left', 's')}</button><div><div class="md2">${emo(E)} ${(w => (w.length ? w : [day.wd]).map((x, i) => i ? WDL[x].toLowerCase() : WDL[x]).join(' e '))(progWeek(p, todayISO()).filter(x => x.id === day.id).map(x => x.wd))} · ${esc(day.name)}</div><div class="lbl">${esc(p.name)}${p.pro ? ' · ' + esc(p.pro) : ''} · ${fdate(p.start)} a ${fdate(p.end)}</div></div></div>
    <div class="rowf wrap">${day.kind === 'descanso' ? '' : `<button class="btn pri sm" data-act="startSess" data-pid="${p.id}" data-did="${day.id}">${ic('play', 's')} ${same ? 'Retomar treino' : 'Iniciar treino'}</button>`}<button class="btn sm" data-act="dayEdit" data-pid="${p.id}" data-id="${day.id}">${ic('pencil', 's')} Editar dia</button></div></div>
   ${day.kind === 'descanso' ? `<div class="mt16">${emptyBox('moon', 'Dia de descanso', 'Nenhum treino previsto neste dia.')}</div>` : day.kind === 'futevolei' ? `<div class="mt16">${emptyBox('activity', 'Futevôlei', 'Use "Iniciar treino" para registrar data, horário, duração e intensidade.')}</div>` : `
   <div class="rowf wrap between mt16"><div class="rowf wrap" style="gap:6px"><span class="chip mu">${day.ex.length} exercícios</span><span class="chip mu">${nSets} séries</span><span class="chip ${nDemo ? 'roxo' : 'mu'}">${nDemo} com demonstração</span>${nPend ? `<span class="chip am">${nPend} para conferir</span>` : ''}</div><button class="btn sm" data-act="exPlanEdit" data-pid="${p.id}" data-did="${day.id}">${ic('plus', 's')} Adicionar exercício</button></div>
@@ -5873,7 +5885,7 @@ function fitWeekHTML(d = D()) {
 }
 function progRotinaCard() {
   const d = D(), p = activeProg(d) || sortedProgs(d)[0]; if (!p) return '';
-  const days = WD_ORDER.map(wd => p.days.find(x => x.wd === wd)).filter(Boolean);
+  const days = progWeek(p, todayISO());
   return `<section class="card s6"><div class="rowf between mb8"><span class="ttl">Rotina semanal <small>${esc(p.name)}</small></span><button class="btn sm" data-act="fitTab" data-v="programa">Abrir programa</button></div>
   <div class="list">${days.map(x => `<div class="li clk" data-act="dayOpen" data-id="${x.id}"><div class="ico t"><b class="xs">${WD3[x.wd].toUpperCase()}</b></div><div class="n"><b class="fw6">${emo(fichaEmo(x))} ${esc(x.name)}</b><small>${KIND_L[x.kind]}${x.kind === 'musculacao' ? ' · ' + x.ex.length + ' exercício' + (x.ex.length === 1 ? '' : 's') : ''}</small></div>${ic('right', 's')}</div>`).join('')}</div></section>`;
 }
